@@ -59,10 +59,10 @@ let main () =
     let eliminated = Cutidentity.eliminate_in_prog compiled in
     let () = print_endline ("Cut identity eliminated") in
     
-    (*let closureconverted = Closureconverter.convert_program compiled in
-      let () = print_endline ("Closure Converted") in*)
+    let closureconverted = Closureconverter.convert_program eliminated in
+    let () = print_endline ("Closure Converted") in
     
-    let () = print_to_file (inputname^".sax") (Saxast.Print.pp_env eliminated) in
+    let () = print_to_file (inputname^".sax") (Saxast.Print.pp_env closureconverted) in
     let () = print_endline ("Wrote to " ^ inputname ^ ".sax") in
     
     serve_exit_code Serve_success |> Stdlib.exit
