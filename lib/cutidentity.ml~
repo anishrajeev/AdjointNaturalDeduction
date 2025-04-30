@@ -1,0 +1,93 @@
+type label = [%import: Saxast.label]
+type tpname = [%import: Saxast.tpname]
+type tp = [%import: Saxast.tp]
+type varname = [%import: Saxast.varname]
+type procname = [%import: Saxast.procname]
+type pat = [%import: Saxast.pat]
+type storable = [%import: Saxast.storable]
+and cmd = [%import: Saxast.cmd]
+type parm = [%import: Saxast.parm]
+type defn = [%import: Saxast.defn]
+type env =  [%import: Saxast.env]
+
+let strc (x : string) (y : string) (cmp : string) : string=
+  if x = cmp then y else cmp
+
+let rec substitution (x : varname) (y : varname) (c : cmd) : cmd =
+  match c with
+  | Read (vn, Small pat) ->
+    let var = strc x y vn in
+    let npat =
+      match pat with
+      | PairPat (p1, p2) -> PairPat (strc x y p1, strc x y p2)
+      | UnitPat -> UnitPat
+      | InjPat (l, v) -> InjPat (l, strc x y v) in
+    Read (var, Small npat)
+  | Read (vn, Branches pcl) ->
+    let npcl =
+      List.map
+        (fun (p, c) ->
+           let shadowed = 
+             match p with
+             | PairPat (v1, v2) -> (v1 = x) || (v2 = x)
+             | UnitPat -> false
+             | InjPat (_, vn) -> vn = x in
+           if shadowed then (p, c) else (p, substitution x y c)) pcl in
+    Read (strc x y vn, Branches npcl)
+  | Write (vn, Small pat) ->
+    let var = strc x y vn in
+    let npat =
+      match pat with
+      | PairPat (p1, p2) -> PairPat (strc x y p1, strc x y p2)
+      | UnitPat -> UnitPat
+      | InjPat (l, v) -> InjPat (l, strc x y v) in
+    Write (var, Small npat)
+  | Write (vn, Branches pcl) ->
+    let npcl =
+      List.map
+        (fun (p, c) ->
+           let shadowed = 
+             match p with
+             | PairPat (v1, v2) -> (v1 = x) || (v2 = x)
+             | UnitPat -> false
+             | InjPat (_, vn) -> vn = x in
+           if shadowed then (p, c) else (p, substitution x y c)) pcl in
+    Write (strc x y vn, Branches npcl)
+  | Cut (vn, t, c1, c2) ->
+    if vn = x then c else Cut (vn, t, substitution x y c1, substitution x y c2)
+  | Id (v1, v2) ->
+    (*let () = print_endline (x ^ " " ^ y ^ " " ^ v1) in
+    let () = print_endline (x ^ " " ^ y ^ " " ^ v2) in*)
+    Id (strc x y v1, strc x y v2)
+  | Call (pn, vn, vnl) -> Call (pn, strc x y vn, List.map (strc x y) vnl)
+    
+
+let rec eliminate_cmd (c : cmd) (b : bool) : cmd =
+  match c with
+  | Read (vn, Small pat) ->
+    Read (vn, Small pat)
+  | Read (vn, Branches pcl) ->
+    Read (vn, Branches (List.map (fun (p, c) -> (p, eliminate_cmd c b)) pcl))
+  | Write (vn, Small pat) -> Write (vn, Small pat)
+  | Write (vn, Branches pcl) ->
+    Write (vn, Branches (List.map (fun (p, c) -> (p, eliminate_cmd c b)) pcl))
+  | Cut (vn, t, Id (v1, v2), c) ->
+    if vn = v1
+    then
+      eliminate_cmd (substitution v1 v2 c) b
+    else Cut (vn, t, Id (v1, v2), eliminate_cmd c b)
+  | Cut (vn, t, c, Id (v1, v2)) ->
+    if vn = v2
+    then eliminate_cmd (substitution v2 v1 c) b
+    else Cut (vn, t, Id (v1, v2), eliminate_cmd c b)
+  | Cut (vn, t, c1, c2) -> Cut (vn, t, eliminate_cmd c1 b, eliminate_cmd c2 b)
+  | Id (v1, v2) -> Id (v1, v2)
+  | Call (pn, vn, vnl) -> Call (pn, vn, vnl)
+
+let eliminate_in_prog (program : env) : env =
+  List.rev
+    (List.fold_left
+       (fun acc -> fun d ->
+          match d with
+          | ProcDefn (n, p, pl, c) -> (ProcDefn (n, p, pl, eliminate_cmd c (n = "drop")))::acc
+          | _ -> d::acc) [] program)

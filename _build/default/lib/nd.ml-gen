@@ -3,8 +3,14 @@
 (** @canonical Nd.Ast *)
 module Ast = Nd__Ast
 
+(** @canonical Nd.Closureconverter *)
+module Closureconverter = Nd__Closureconverter
+
 (** @canonical Nd.Compile *)
 module Compile = Nd__Compile
+
+(** @canonical Nd.Cutidentity *)
+module Cutidentity = Nd__Cutidentity
 
 (** @canonical Nd.Elaboration *)
 module Elaboration = Nd__Elaboration

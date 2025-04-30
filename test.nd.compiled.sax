@@ -1,0 +1,15 @@
+type boolean[m] = [m](+{'false : [m](1), 'true : [m](1)})
+
+proc equal$0 (s$1 : [U](([U](int32) -> [U](([U](int32) -> [U](int32))))))  =
+    write s$1 {
+    | (x, s$2) => write s$2 {
+                  | (y, s$3) => cut s$4 : [U](int32) {
+                                    id s$4 x
+                                }
+                                cut s$5 : [U](int32) {
+                                    id s$5 y
+                                }
+                                add s$3 x  y
+                  }
+    }
+

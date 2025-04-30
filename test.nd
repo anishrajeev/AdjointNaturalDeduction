@@ -1,21 +1,3 @@
-type tester[m] = +{'nil : 1}
-type modelboolean[m] = [m]+{'false : [m]1, 'true : [m]1, 'maybe : [m]1}
 type boolean[m] = [m]+{'false : [m]1, 'true : [m]1}
-defn five : [A]int32 = 5
-defn three : [A]int32 = 3
 
-defn equal (x : [A]int32) (y : [A]int32) : [A]int32 =
-   match x = y with
-   | 'true () => 1
-   | 'false () => 0
-   end
-
-defn one : [A]int32 = equal five 5
-defn oneo : [A]int32 = equal 5 five
-defn oned : [A]int32 = equal five five
-defn onel : [A]int32 = equal 5 5
-
-defn zero : [A]int32 = equal five 3
-defn zeroo : [A]int32 = equal 3 five
-defn zerod : [A]int32 = equal five five
-defn zerol : [A]int32 = equal 3 3
+defn equal : int32 -> int32 -> int32 = fun x => fun y => x + y
