@@ -1,0 +1,68 @@
+type token =
+    WRITE
+  | WITH
+  | VALUE
+  | UPARROW
+  | TYPE
+  | SUSP
+  | STAR
+  | SLASH
+  | RPAREN
+  | RIGHTARROW
+  | REUSE
+  | RECORD
+  | READ
+  | RBRACKET
+  | RBRACE
+  | RANGLE
+  | PROC
+  | PLUS
+  | NAT of int
+  | MINUS
+  | MATCH
+  | LPAREN
+  | LBRACKET
+  | LBRACE
+  | LANGLE
+  | LABEL of string
+  | INT32
+  | INST
+  | IDENT of string
+  | ID
+  | FUN
+  | FORCE
+  | FAIL
+  | EQUAL
+  | EOF
+  | END
+  | DOT
+  | DEFN
+  | CUT
+  | COMMA
+  | COLON
+  | CLOS
+  | CALL
+  | BAR
+  | ARROW
+  | AMPERSAND
+val errors : Error_msg.t
+val menhir_begin_marker : int
+val xv_tp : Ast.tp
+val xv_prog : Ast.env
+val xv_pat : Ast.pat
+val xv_parms : Ast.parm list
+val xv_parm : Ast.parm
+val xv_numexp : Ast.exp
+val xv_modes : Ast.mode list
+val xv_mode : Ast.mode
+val xv_fields : (string * Ast.exp) list
+val xv_field : string * Ast.exp
+val xv_exp : Ast.exp
+val xv_defn : Ast.defn
+val xv_branches : (Ast.pat * Ast.exp) list
+val xv_branch : Ast.pat * Ast.exp
+val xv_atoms : Ast.atom list
+val xv_atom : Ast.atom
+val xv_alts : (string * Ast.tp) list
+val xv_alt : string * Ast.tp
+val menhir_end_marker : int

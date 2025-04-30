@@ -1,0 +1,5 @@
+(ocamllex
+ (modules nd_lexer))
+
+(menhir
+ (modules nd_parser))

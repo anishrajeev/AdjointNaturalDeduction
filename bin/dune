@@ -1,0 +1,4 @@
+(executables
+ (names nd)
+ (modes byte exe)
+ (libraries nd))

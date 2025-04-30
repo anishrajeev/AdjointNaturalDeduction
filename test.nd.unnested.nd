@@ -1,0 +1,52 @@
+type tester[m] = [m](+{'nil : [m](1)})
+
+type modelboolean[m] = [m](+{'false : [m](1), 'true : [m](1), 'maybe : [m](1)})
+
+type boolean[m] = [m](+{'false : [m](1), 'true : [m](1)})
+
+defn five  : [A](int32) =
+    5
+
+defn three  : [A](int32) =
+    3
+
+defn equal (x : [A](int32)) (y : [A](int32)) : [A](int32) =
+    match (x = y) with
+    | n$1 => match n$1 with
+        | 'true(n$2) => match n$2 with
+            | n$3 => match n$3 with
+                | () => 1
+                end
+            end
+        | 'false(n$2) => match n$2 with
+            | n$4 => match n$4 with
+                | () => 0
+                end
+            end
+        end
+    end
+
+defn one  : [A](int32) =
+    (equal five (5))
+
+defn oneo  : [A](int32) =
+    (equal (5) five)
+
+defn oned  : [A](int32) =
+    (equal five five)
+
+defn onel  : [A](int32) =
+    (equal (5) (5))
+
+defn zero  : [A](int32) =
+    (equal five (3))
+
+defn zeroo  : [A](int32) =
+    (equal (3) five)
+
+defn zerod  : [A](int32) =
+    (equal five five)
+
+defn zerol  : [A](int32) =
+    (equal (3) (3))
+

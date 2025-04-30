@@ -1,0 +1,9 @@
+type t[m] = [m](1)
+
+defn f  : t[U] =
+    ()
+
+inst f  : t[L]
+
+inst f  : t[l]
+
