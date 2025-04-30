@@ -56,4 +56,5 @@ type env = defn list
 
 module Print : sig
   val pp_env : env -> string
+  val pp_tp : tp -> string
 end

@@ -2,11 +2,8 @@ type nat[m] = [m](+{'zero : [m](1), 'succ : nat[m]})
 
 proc one$0 (s$1 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
     write s$1 {
-    | (x, s$2) => call one$0_1 s$2 
-    }
-
-proc one$0_1 (d$0 : [U]((nat[U] -> nat[U])))  =
-    write d$0 {
-    | (x, s$3) => id s$3 x
+    | (x, s$2) => write s$2 {
+                  | (x, s$3) => id s$3 x
+                  }
     }
 

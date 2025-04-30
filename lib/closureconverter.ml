@@ -199,9 +199,9 @@ let convert_program (program : env) : env =
             let pd = ProcDefn (pn, (dest, desttp), pl, c') in
             inner program (acc @ (pd::e))
           | Branches [(PairPat (p, d), c)] ->
-            let desttp = type_inst_converter types (unroll_type desttp) in
-            let (pd, desttp) = (match desttp with | Arrow (t1, t2) -> (t1, t2) | _ -> raise (ClosureConversionError "Type Error")) in
-            let (c', _, e) = convert_cmd types ((p, pd)::pl) pn desttp c in
+            let dt = type_inst_converter types (unroll_type desttp) in
+            let (pd, dt) = (match dt with | Arrow (t1, t2) -> (t1, t2) | _ -> raise (ClosureConversionError "Type Error")) in
+            let (c', _, e) = convert_cmd types ((p, pd)::pl) pn dt c in
             let pd = ProcDefn (pn, (dest, desttp), pl, Write (dest, Branches [(PairPat (p, d), c')])) in
             inner program (acc @ (pd::e))
           | Branches pcl ->

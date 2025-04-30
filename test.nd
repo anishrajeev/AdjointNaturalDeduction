@@ -1,3 +1,4 @@
-type boolean[m] = [m]+{'false : [m]1, 'true : [m]1}
+type nat[m] = +{'zero : 1, 'succ : nat[m]}
 
-defn equal : int32 -> int32 -> int32 = fun x => fun y => x + y
+defn one : nat -> nat -> nat = fun x => fun x => x
+
