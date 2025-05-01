@@ -1,11 +1,5 @@
-value fib_stream_prefix$0 = (('cons(('s('z())), ('cons(('s('s('z()))), ('cons(('s('s('s('z())))), ('cons(('s('s('s('s('s('z())))))), ('cons(('s('s('s('s('s('s('s('s('z()))))))))), ('cons(('s('s('s('s('s('s('s('s('s('s('s('s('s('z())))))))))))))), ('cons(('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('z())))))))))))))))))))))), ('cons(('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('s('z()))))))))))))))))))))))))))))))))))), ('nil()))))))))))))))))), clos)
-value fib_stream$0 = clos
-value twos_prefix$0 = (('cons(('s('s('z()))), ('cons(('s('s('z()))), ('cons(('s('s('z()))), ('cons(('s('s('z()))), ('nil()))))))))), clos)
-value twos$0 = clos
-value ones$0 = clos
-value zeros$0 = clos
-value eight$0 = ('s('s('s('s('s('s('s('s('z())))))))))
-value four$0 = ('s('s('s('s('z())))))
-value two$0 = ('s('s('z())))
-value one$0 = ('s('z()))
-value zero$0 = ('z())
+value ack_two_two$0 = ('succ('succ('succ('succ('succ('succ('succ('zero()))))))))
+value three$0 = ('succ('succ('succ('zero()))))
+value two$0 = ('succ('succ('zero())))
+value one$1 = ('succ('zero()))
+value one$0 = ('succ('zero()))

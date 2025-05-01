@@ -76,14 +76,14 @@ void print$nat(addr val$) {
 switch (val$->tag){
 case TAG_zero:{
 addr val$_TAG_zero = (val$+1)->ptr;
-printf("('zero");
+printf(" ('zero");
 printf("()");
 printf(")");
 break;
 }
 case TAG_succ:{
 addr val$_TAG_succ = (val$+1)->ptr;
-printf("('succ");
+printf(" ('succ");
 print$nat(val$_TAG_succ);
 printf(")");
 break;
@@ -208,7 +208,7 @@ void succ$0(addr s$1, addr n) {
 }
 int main (){
 	init_heap(1024 * 1024);
-	freopen("test.nd.val", "w", stdout);
+	freopen("ack_02.nd.val", "w", stdout);
 	addr ack_two_two$0$value = alloc(2);
 	ack_two_two$0(ack_two_two$0$value);
 	printf("value %s = ", "ack_two_two$0");

@@ -1,0 +1,5 @@
+value ack_two_two$0 =  ('succ ('succ ('succ ('succ ('succ ('succ ('succ ('zero()))))))))
+value three$0 =  ('succ ('succ ('succ ('zero()))))
+value two$0 =  ('succ ('succ ('zero())))
+value one$1 =  ('succ ('zero()))
+value one$0 =  ('succ ('zero()))
