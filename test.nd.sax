@@ -1,3 +1,7 @@
+type nat[k] = [k](+{'zero : [k](1), 'succ : nat[k]})
+
+type calc[k] = [k](&{'add : [k]((nat[k] -> calc[k])), 'multiply : [k]((nat[k] -> calc[k])), 'subtract : [k]((nat[k] -> calc[k]))})
+
 proc twentyfivecalc$0 (s$191 : calc[U])  =
     cut s$192 : calc[U] {
         call fivecalc$0 s$192 
@@ -71,6 +75,140 @@ proc five$0 (s$167 : nat[U])  =
     }
     write s$167 'succ(s$168)
 
+proc calculator$1 (s$108 : [U]((nat[U] -> calc[U])))  =
+    call calculator$1_1 s$108 
+
+proc calculator$1_1 (d$0 : [U]((nat[U] -> calc[U])))  =
+    write d$0 {
+    | (start, s$138) => call calculator$1_1_1 s$138 start
+    }
+
+proc calculator$1_1_1 (d$0 : calc[U]) (start : nat[U]) =
+    write d$0 {
+    | 'add(s$139) => call calculator$1_1_1_2 s$139 start
+    | 'multiply(s$149) => call calculator$1_1_1_3 s$149 start
+    | 'subtract(s$159) => call calculator$1_1_1_4 s$159 start
+    }
+
+proc calculator$1_1_1_2 (d$0 : [U]((nat[U] -> calc[U]))) (start : nat[U]) =
+    write d$0 {
+    | (n, s$140) => cut s$141 : [U]((nat[U] -> calc[U])) {
+                        call calculator$0 s$141 
+                    }
+                    cut s$142 : nat[U] {
+                        cut s$144 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
+                            call addition$0 s$144 
+                        }
+                        cut s$146 : [U]((nat[U] -> nat[U])) {
+                            read s$144 (start, s$146)
+
+                        }
+                        read s$146 (start, s$142)
+
+                    }
+                    read s$141 (s$142, s$140)
+
+    }
+
+proc calculator$1_1_1_3 (d$0 : [U]((nat[U] -> calc[U]))) (start : nat[U]) =
+    write d$0 {
+    | (n, s$150) => cut s$151 : [U]((nat[U] -> calc[U])) {
+                        call calculator$0 s$151 
+                    }
+                    cut s$152 : nat[U] {
+                        cut s$154 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
+                            call multiplication$0 s$154 
+                        }
+                        cut s$156 : [U]((nat[U] -> nat[U])) {
+                            read s$154 (start, s$156)
+
+                        }
+                        read s$156 (n, s$152)
+
+                    }
+                    read s$151 (s$152, s$150)
+
+    }
+
+proc calculator$1_1_1_4 (d$0 : [U]((nat[U] -> calc[U]))) (start : nat[U]) =
+    write d$0 {
+    | (n, s$160) => cut s$161 : [U]((nat[U] -> calc[U])) {
+                        call calculator$0 s$161 
+                    }
+                    cut s$162 : nat[U] {
+                        call subtract$0 s$162 start n
+                    }
+                    read s$161 (s$162, s$160)
+
+    }
+
+proc calculator$0 (s$108 : [U]((nat[U] -> calc[U])))  =
+    call calculator$0_1 s$108 
+
+proc calculator$0_1 (d$0 : [U]((nat[U] -> calc[U])))  =
+    write d$0 {
+    | (start, s$109) => call calculator$0_1_1 s$109 start
+    }
+
+proc calculator$0_1_1 (d$0 : calc[U]) (start : nat[U]) =
+    write d$0 {
+    | 'add(s$110) => call calculator$0_1_1_2 s$110 start
+    | 'multiply(s$120) => call calculator$0_1_1_3 s$120 start
+    | 'subtract(s$130) => call calculator$0_1_1_4 s$130 start
+    }
+
+proc calculator$0_1_1_2 (d$0 : [U]((nat[U] -> calc[U]))) (start : nat[U]) =
+    write d$0 {
+    | (n, s$111) => cut s$112 : [U]((nat[U] -> calc[U])) {
+                        call calculator$0 s$112 
+                    }
+                    cut s$113 : nat[U] {
+                        cut s$115 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
+                            call addition$0 s$115 
+                        }
+                        cut s$117 : [U]((nat[U] -> nat[U])) {
+                            read s$115 (start, s$117)
+
+                        }
+                        read s$117 (start, s$113)
+
+                    }
+                    read s$112 (s$113, s$111)
+
+    }
+
+proc calculator$0_1_1_3 (d$0 : [U]((nat[U] -> calc[U]))) (start : nat[U]) =
+    write d$0 {
+    | (n, s$121) => cut s$122 : [U]((nat[U] -> calc[U])) {
+                        call calculator$0 s$122 
+                    }
+                    cut s$123 : nat[U] {
+                        cut s$125 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
+                            call multiplication$0 s$125 
+                        }
+                        cut s$127 : [U]((nat[U] -> nat[U])) {
+                            read s$125 (start, s$127)
+
+                        }
+                        read s$127 (n, s$123)
+
+                    }
+                    read s$122 (s$123, s$121)
+
+    }
+
+proc calculator$0_1_1_4 (d$0 : [U]((nat[U] -> calc[U]))) (start : nat[U]) =
+    write d$0 {
+    | (n, s$131) => cut s$132 : [U]((nat[U] -> calc[U])) {
+                        call calculator$0 s$132 
+                    }
+                    cut s$133 : nat[U] {
+                        call subtract$0 s$133 start n
+                    }
+                    read s$132 (s$133, s$131)
+
+    }
+
 proc subtract$1 (s$73 : nat[U]) (x : nat[U]) (y : nat[U]) =
     read x {
     | 'zero(n$2) => read n$2 {
@@ -103,100 +241,15 @@ proc subtract$0 (s$73 : nat[U]) (x : nat[U]) (y : nat[U]) =
                     }
     }
 
-type nat[k] = [k](+{'zero : [k](1), 'succ : nat[k]})
-
-type calc[k] = [k](&{'add : [k]((nat[k] -> calc[k])), 'multiply : [k]((nat[k] -> calc[k])), 'subtract : [k]((nat[k] -> calc[k]))})
-
-proc addition$0 (s$1 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
-    write s$1 {
-    | (n1, s$2) => call addition$0_1 s$2 n1
-    }
-
-proc addition$0_1 (d$0 : [U]((nat[U] -> nat[U]))) (n1 : nat[U]) =
-    write d$0 {
-    | (n2, s$3) => read n1 {
-                   | 'zero(n$22) => read n$22 {
-                                    | () => id s$3 n2
-                                    }
-                   | 'succ(n$22) => cut s$12 : nat[U] {
-                                        cut s$13 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
-                                            call addition$0 s$13 
-                                        }
-                                        cut s$15 : [U]((nat[U] -> nat[U])) {
-                                            read s$13 (n$22, s$15)
-
-                                        }
-                                        read s$15 (n2, s$12)
-
-                                    }
-                                    write s$3 'succ(s$12)
-                   }
-    }
-
-proc addition$1 (s$1 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
-    write s$1 {
-    | (n1, s$18) => call addition$1_1 s$18 n1
-    }
-
-proc addition$1_1 (d$0 : [U]((nat[U] -> nat[U]))) (n1 : nat[U]) =
-    write d$0 {
-    | (n2, s$19) => read n1 {
-                    | 'zero(n$22) => read n$22 {
-                                     | () => id s$19 n2
-                                     }
-                    | 'succ(n$22) => cut s$28 : nat[U] {
-                                         cut s$29 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
-                                             call addition$0 s$29 
-                                         }
-                                         cut s$31 : [U]((nat[U] -> nat[U])) {
-                                             read s$29 (n$22, s$31)
-
-                                         }
-                                         read s$31 (n2, s$28)
-
-                                     }
-                                     write s$19 'succ(s$28)
-                    }
-    }
-
-proc multiplication$0 (s$34 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
-    write s$34 {
-    | (n1, s$35) => call multiplication$0_1 s$35 n1
-    }
-
-proc multiplication$0_1 (d$0 : [U]((nat[U] -> nat[U]))) (n1 : nat[U]) =
-    write d$0 {
-    | (n2, s$36) => read n1 {
-                    | 'zero(n$14) => write s$36 'zero(n$14)
-                    | 'succ(n$14) => cut s$44 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
-                                         call addition$0 s$44 
-                                     }
-                                     cut s$46 : [U]((nat[U] -> nat[U])) {
-                                         read s$44 (n2, s$46)
-
-                                     }
-                                     cut s$47 : nat[U] {
-                                         cut s$49 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
-                                             call multiplication$0 s$49 
-                                         }
-                                         cut s$51 : [U]((nat[U] -> nat[U])) {
-                                             read s$49 (n$14, s$51)
-
-                                         }
-                                         read s$51 (n2, s$47)
-
-                                     }
-                                     read s$46 (s$47, s$36)
-
-                    }
-    }
-
 proc multiplication$1 (s$34 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
-    write s$34 {
-    | (n1, s$54) => call multiplication$1_1 s$54 n1
+    call multiplication$1_1 s$34 
+
+proc multiplication$1_1 (d$0 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
+    write d$0 {
+    | (n1, s$54) => call multiplication$1_1_1 s$54 n1
     }
 
-proc multiplication$1_1 (d$0 : [U]((nat[U] -> nat[U]))) (n1 : nat[U]) =
+proc multiplication$1_1_1 (d$0 : [U]((nat[U] -> nat[U]))) (n1 : nat[U]) =
     write d$0 {
     | (n2, s$55) => read n1 {
                     | 'zero(n$14) => write s$55 'zero(n$14)
@@ -223,131 +276,96 @@ proc multiplication$1_1 (d$0 : [U]((nat[U] -> nat[U]))) (n1 : nat[U]) =
                     }
     }
 
-proc calculator$0 (s$108 : [U]((nat[U] -> calc[U])))  =
-    write s$108 {
-    | (start, s$109) => call calculator$0_1 s$109 start
-    }
+proc multiplication$0 (s$34 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
+    call multiplication$0_1 s$34 
 
-proc calculator$0_1 (d$0 : calc[U]) (start : nat[U]) =
+proc multiplication$0_1 (d$0 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
     write d$0 {
-    | 'add(s$110) => call calculator$0_1_2 s$110 start
-    | 'multiply(s$120) => call calculator$0_1_3 s$120 start
-    | 'subtract(s$130) => call calculator$0_1_4 s$130 start
+    | (n1, s$35) => call multiplication$0_1_1 s$35 n1
     }
 
-proc calculator$0_1_2 (d$0 : [U]((nat[U] -> calc[U]))) (start : nat[U]) =
+proc multiplication$0_1_1 (d$0 : [U]((nat[U] -> nat[U]))) (n1 : nat[U]) =
     write d$0 {
-    | (n, s$111) => cut s$112 : [U]((nat[U] -> calc[U])) {
-                        call calculator$0 s$112 
+    | (n2, s$36) => read n1 {
+                    | 'zero(n$14) => write s$36 'zero(n$14)
+                    | 'succ(n$14) => cut s$44 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
+                                         call addition$0 s$44 
+                                     }
+                                     cut s$46 : [U]((nat[U] -> nat[U])) {
+                                         read s$44 (n2, s$46)
+
+                                     }
+                                     cut s$47 : nat[U] {
+                                         cut s$49 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
+                                             call multiplication$0 s$49 
+                                         }
+                                         cut s$51 : [U]((nat[U] -> nat[U])) {
+                                             read s$49 (n$14, s$51)
+
+                                         }
+                                         read s$51 (n2, s$47)
+
+                                     }
+                                     read s$46 (s$47, s$36)
+
                     }
-                    cut s$113 : nat[U] {
-                        cut s$115 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
-                            call addition$0 s$115 
-                        }
-                        cut s$117 : [U]((nat[U] -> nat[U])) {
-                            read s$115 (start, s$117)
-
-                        }
-                        read s$117 (start, s$113)
-
-                    }
-                    read s$112 (s$113, s$111)
-
     }
 
-proc calculator$0_1_3 (d$0 : [U]((nat[U] -> calc[U]))) (start : nat[U]) =
+proc addition$1 (s$1 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
+    call addition$1_1 s$1 
+
+proc addition$1_1 (d$0 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
     write d$0 {
-    | (n, s$121) => cut s$122 : [U]((nat[U] -> calc[U])) {
-                        call calculator$0 s$122 
-                    }
-                    cut s$123 : nat[U] {
-                        cut s$125 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
-                            call multiplication$0 s$125 
-                        }
-                        cut s$127 : [U]((nat[U] -> nat[U])) {
-                            read s$125 (start, s$127)
-
-                        }
-                        read s$127 (n, s$123)
-
-                    }
-                    read s$122 (s$123, s$121)
-
+    | (n1, s$18) => call addition$1_1_1 s$18 n1
     }
 
-proc calculator$0_1_4 (d$0 : [U]((nat[U] -> calc[U]))) (start : nat[U]) =
+proc addition$1_1_1 (d$0 : [U]((nat[U] -> nat[U]))) (n1 : nat[U]) =
     write d$0 {
-    | (n, s$131) => cut s$132 : [U]((nat[U] -> calc[U])) {
-                        call calculator$0 s$132 
-                    }
-                    cut s$133 : nat[U] {
-                        call subtract$0 s$133 start n
-                    }
-                    read s$132 (s$133, s$131)
+    | (n2, s$19) => read n1 {
+                    | 'zero(n$22) => read n$22 {
+                                     | () => id s$19 n2
+                                     }
+                    | 'succ(n$22) => cut s$28 : nat[U] {
+                                         cut s$29 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
+                                             call addition$0 s$29 
+                                         }
+                                         cut s$31 : [U]((nat[U] -> nat[U])) {
+                                             read s$29 (n$22, s$31)
 
+                                         }
+                                         read s$31 (n2, s$28)
+
+                                     }
+                                     write s$19 'succ(s$28)
+                    }
     }
 
-proc calculator$1 (s$108 : [U]((nat[U] -> calc[U])))  =
-    write s$108 {
-    | (start, s$138) => call calculator$1_1 s$138 start
-    }
+proc addition$0 (s$1 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
+    call addition$0_1 s$1 
 
-proc calculator$1_1 (d$0 : calc[U]) (start : nat[U]) =
+proc addition$0_1 (d$0 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
     write d$0 {
-    | 'add(s$139) => call calculator$1_1_2 s$139 start
-    | 'multiply(s$149) => call calculator$1_1_3 s$149 start
-    | 'subtract(s$159) => call calculator$1_1_4 s$159 start
+    | (n1, s$2) => call addition$0_1_1 s$2 n1
     }
 
-proc calculator$1_1_2 (d$0 : [U]((nat[U] -> calc[U]))) (start : nat[U]) =
+proc addition$0_1_1 (d$0 : [U]((nat[U] -> nat[U]))) (n1 : nat[U]) =
     write d$0 {
-    | (n, s$140) => cut s$141 : [U]((nat[U] -> calc[U])) {
-                        call calculator$0 s$141 
-                    }
-                    cut s$142 : nat[U] {
-                        cut s$144 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
-                            call addition$0 s$144 
-                        }
-                        cut s$146 : [U]((nat[U] -> nat[U])) {
-                            read s$144 (start, s$146)
+    | (n2, s$3) => read n1 {
+                   | 'zero(n$22) => read n$22 {
+                                    | () => id s$3 n2
+                                    }
+                   | 'succ(n$22) => cut s$12 : nat[U] {
+                                        cut s$13 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
+                                            call addition$0 s$13 
+                                        }
+                                        cut s$15 : [U]((nat[U] -> nat[U])) {
+                                            read s$13 (n$22, s$15)
 
-                        }
-                        read s$146 (start, s$142)
+                                        }
+                                        read s$15 (n2, s$12)
 
-                    }
-                    read s$141 (s$142, s$140)
-
-    }
-
-proc calculator$1_1_3 (d$0 : [U]((nat[U] -> calc[U]))) (start : nat[U]) =
-    write d$0 {
-    | (n, s$150) => cut s$151 : [U]((nat[U] -> calc[U])) {
-                        call calculator$0 s$151 
-                    }
-                    cut s$152 : nat[U] {
-                        cut s$154 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))) {
-                            call multiplication$0 s$154 
-                        }
-                        cut s$156 : [U]((nat[U] -> nat[U])) {
-                            read s$154 (start, s$156)
-
-                        }
-                        read s$156 (n, s$152)
-
-                    }
-                    read s$151 (s$152, s$150)
-
-    }
-
-proc calculator$1_1_4 (d$0 : [U]((nat[U] -> calc[U]))) (start : nat[U]) =
-    write d$0 {
-    | (n, s$160) => cut s$161 : [U]((nat[U] -> calc[U])) {
-                        call calculator$0 s$161 
-                    }
-                    cut s$162 : nat[U] {
-                        call subtract$0 s$162 start n
-                    }
-                    read s$161 (s$162, s$160)
-
+                                    }
+                                    write s$3 'succ(s$12)
+                   }
     }
 

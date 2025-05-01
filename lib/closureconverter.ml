@@ -238,44 +238,8 @@ let convert_program (program : env) : env =
     | [] -> acc
     | (ProcDefn (pn, (dest, desttp), pl, c))::program ->
       let () = set_count 0 in
-      (match c with
-       | Write (_, s) ->
-         (match s with
-          | Small _ ->
-            let (c', _, e) = convert_cmd types pl pn desttp c in
-            let pd = ProcDefn (pn, (dest, desttp), pl, c') in
-            inner program (acc @ (pd::e))
-          | Branches [(PairPat (p, d), c)] ->
-            let dt = type_inst_converter types (unroll_type desttp) in
-            let (pt, dt) = (match dt with | Arrow (t1, t2) -> (t1, t2) | _ -> raise (ClosureConversionError "Type Error4")) in
-            let (c', _, e) = convert_cmd types ((p, pt)::pl) pn dt c in
-            let pd = ProcDefn (pn, (dest, desttp), pl, Write (dest, Branches [(PairPat (p, d), c')])) in
-            inner program (acc @ (pd::e))
-              
-          | Branches [(ShiftPat v, c)] ->
-            let innertp = type_inst_converter types (unroll_type desttp) in
-            let innertp = (match innertp with | Up t -> t | _ -> raise (ClosureConversionError "Type Error4.5")) in
-            let (c', _, e) = convert_cmd types ((v, innertp)::pl) pn innertp c in
-            let pd = ProcDefn (pn, (dest, desttp), pl, Write (dest, Branches [(ShiftPat v, c')])) in
-            inner program (acc @ (pd::e))
-          | Branches pcl ->
-            let ltl = (match (type_inst_converter types (unroll_type desttp)) with | With ltl -> ltl | _ -> raise (ClosureConversionError "Type Error5")) in
-            let (e, npcl) =
-              List.fold_left_map
-                (fun acc -> fun (p, c) ->
-                   match p with
-                   | InjPat (l, x) ->
-                     let dt = contains ltl l in
-                     let (c', _, e) = convert_cmd types pl pn dt c in
-                     (acc @ e, (InjPat (l, x), c'))
-                   | _ -> raise (ClosureConversionError "Type Error6")) [] pcl
-            in
-            let pd = ProcDefn (pn, (dest, desttp), pl, Write (dest, Branches npcl)) in
-            inner program (acc @ (pd::e)))
-       | _ ->
-         let (c', _, e) = convert_cmd types pl pn desttp c in
-         let pd = ProcDefn (pn, (dest, desttp), pl, c') in
-         inner program ((pd::e) @ acc))
+      let (c', _, e) = convert_cmd types pl pn desttp c in
+      inner program acc @ ((ProcDefn (pn, (dest, desttp), pl, c'))::e)
     | d::program -> inner program (acc @ [d])
   in
   inner program []
