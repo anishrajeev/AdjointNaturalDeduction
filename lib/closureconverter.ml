@@ -134,7 +134,36 @@ let rec join (c1 : context) (c2 : context) : context =
 let rec convert_cmd (types : tpdefn list) (gamma : context) (pname : procname) (desttp : tp) (c : cmd) : cmd * context * env =
   let find = contains gamma in
   match c with
-  | Read (vn, _) -> (c, [(vn, find vn)], [])
+  | Read (vn, s) ->
+    (match s with
+     | Small _ ->  (c, [(vn, find vn)], [])
+     | Branches pcl ->
+       let tp = unroll_type (type_inst_converter types (find vn)) in
+       let ((sigma, e), npcl) = 
+       List.fold_left_map
+         (fun (sigma, e) -> fun (p, c) ->
+            match p with
+            | PairPat (v1, v2) ->
+              let (t1, t2) = (match tp with | Times (t1, t2) -> (t1, t2) | _ -> raise (ClosureConversionError "Reading error1")) in
+              let (c', sigma', e') = convert_cmd types ((v1, t1)::(v2, t2)::gamma) pname desttp c in
+              ((join sigma (remove (remove sigma' v1) v2), e @ e'), (p, c'))
+            | UnitPat ->
+              let (c', sigma', e') = convert_cmd types gamma pname desttp c in
+              ((join sigma sigma', e @ e'), (p, c'))
+            | InjPat (l, v) ->
+              let ltl = (match tp with | Plus ltl -> ltl | _ -> raise (ClosureConversionError "Reading error2")) in
+              let t = contains ltl l in
+              let (c', sigma', e') = convert_cmd types ((v, t)::gamma) pname desttp c in
+              ((join sigma (remove sigma' v), e @ e'), (p, c'))
+            | ShiftPat v ->
+              let t = (match tp with | Down t -> t | _ -> raise (ClosureConversionError "Reading error2")) in
+              let (c', sigma', e') = convert_cmd types ((v, t)::gamma) pname desttp c in
+              ((join sigma (remove sigma' v), e @ e'), (p, c'))
+            | VarPat v ->
+              let (c', sigma', e') = convert_cmd types ((v, tp)::gamma) pname desttp c in
+              ((join sigma (remove sigma' v), e @ e'), (p, c'))) ([], []) pcl
+       in
+       (Read (vn, Branches npcl), (vn, find vn)::sigma, e))
   | Write (vn, s) ->
     (match s with
     | Small (PairPat (v1, v2)) -> (c, [(v1, find v1); (v2, find v2)], [])
@@ -213,10 +242,11 @@ let convert_program (program : env) : env =
             inner program (acc @ (pd::e))
           | Branches [(PairPat (p, d), c)] ->
             let dt = type_inst_converter types (unroll_type desttp) in
-            let (pd, dt) = (match dt with | Arrow (t1, t2) -> (t1, t2) | _ -> raise (ClosureConversionError "Type Error4")) in
-            let (c', _, e) = convert_cmd types ((p, pd)::pl) pn dt c in
+            let (pt, dt) = (match dt with | Arrow (t1, t2) -> (t1, t2) | _ -> raise (ClosureConversionError "Type Error4")) in
+            let (c', _, e) = convert_cmd types ((p, pt)::pl) pn dt c in
             let pd = ProcDefn (pn, (dest, desttp), pl, Write (dest, Branches [(PairPat (p, d), c')])) in
             inner program (acc @ (pd::e))
+              
           | Branches [(ShiftPat v, c)] ->
             let innertp = type_inst_converter types (unroll_type desttp) in
             let innertp = (match innertp with | Up t -> t | _ -> raise (ClosureConversionError "Type Error4.5")) in

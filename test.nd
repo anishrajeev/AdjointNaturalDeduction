@@ -1,38 +1,9 @@
-type nat[m] = +{'zero : 1, 'succ : nat[m]}
-defn zero : nat = 'zero ()
-defn succ (n : nat) : nat = 'succ n
+type bool[m] = +{'true : 1, 'false : 1}
+type char[m] = +{'b0 : 1, 'b1 : 1}
+type str[m] = +{'nil : 1, 'cons : char[m] * str[m]}
+type automaton[m] = &{'accepts : bool[m], 'step : char[m] -> automaton[m]}
 
-defn one : nat = succ zero
-
-defn add (a : nat) (b : nat) : nat =
-match b with
-| 'zero () => a
-| 'succ b1 => succ (add a b1)
+defn run_automaton : automaton[L] -> str[L] -> bool[L] = fun a => fun s => match s with
+| 'nil () => a .'accepts
+| 'cons (c, s) => run_automaton (a .'step c) s
 end
-
-type vm[m s] = &{
-    'push : <nat[s]> -> vm[m s],
-    'pop : <nat[s]> * vm[m s],
-    'add : vm[m s]
-
-    % i got lazy
-    % 'block : vm,
-    % 'br : nat -> vm,
-    % 'brif : nat -> vm,
-}
-
-defn vmstack (top : <nat>) (rest : vm) : vm =
-record
-| 'push => fun n => vmstack n (vmstack top rest)
-| 'pop => (top, rest)
-| 'add => match (rest.'pop, top) with | ((<x>, xs), <t>) => vmstack <(add t x)> xs end
-end
-
-defn emptyvm : vm =
-record
-| 'push => fun n => vmstack n emptyvm
-| 'pop => (<zero>, emptyvm)
-| 'add => emptyvm
-end
-
-defn twovm : vm = emptyvm . 'push <one> . 'push <one> . 'add
