@@ -1,9 +1,18 @@
-type nat[fat] = +{'zero : 1, 'succ : nat[fat]}
+type nat[m] = +{'succ: nat[m], 'zero: 1}
+type natfunc[m k] = [m]^(nat[k] -> nat[k])
+type natlist[m k] = +{'cons : <nat[k]> * natlist[m k], 'nil : 1}
 
-defn addCPS (x: nat[U]) (y: nat) (k: nat -> nat[U]) : nat = 
-  match x with
-  | 'zero() => k y
-  | 'succ(xx) => addCPS xx y (fun res => k ('succ(res)))
-  end
+defn apply (ns:natlist) (f:natfunc) : natlist = 
+	match ns with
+	| 'cons (<n>,ns) => 'cons (<f.force n>, apply ns f)
+	| 'nil () => 'nil ()
+	end
+inst apply (ns:natlist[U U]) (f:natfunc[U U]) : natlist[U U]
+inst apply (ns:natlist[L U]) (f:natfunc[U U]) : natlist[L U]
 
-defn four : nat = addCPS ('succ('succ('zero()))) ('succ('zero())) (fun x => 'succ(x))
+defn succ_nat : nat -> nat = fun x => 'succ x
+inst succ_nat: nat[U] -> nat[U]
+defn l : natlist = 'cons (<'zero ()>, 'nil ())
+inst l : natlist[L U]
+defn main_linear_linear : natlist = apply l (susp succ_nat)
+inst main_linear_linear : natlist[L U]

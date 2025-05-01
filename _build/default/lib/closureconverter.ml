@@ -153,6 +153,19 @@ let rec convert_cmd (types : tpdefn list) (gamma : context) (pname : procname) (
       let () = set_count num in
       let procd = ProcDefn (fresh_name, ("d$0", desttp), sigma', Write ("d$0", Branches [(PairPat (p, d), c')])) in
       (Call (fresh_name, vn, List.map (fun (v, _) -> v) sigma'), sigma', procd::e)
+
+    | Branches [(ShiftPat v, c)] ->
+      let unrolled_tp = type_inst_converter types (unroll_type desttp) in
+      let innertp = (match unrolled_tp with | Up t -> t | _ -> raise (ClosureConversionError "Type error1.5")) in
+      let fresh_name = pname ^ "_" ^ (next ()) in
+      let num = get_count () in
+      let () = set_count 0 in
+      let (c', sigma, e) = convert_cmd types gamma fresh_name innertp c in
+      let sigma' = remove sigma v in
+      let procd = ProcDefn (fresh_name, ("d$0", desttp), sigma', Write ("d$0", Branches [(ShiftPat v, c')])) in
+      let () = set_count num in
+      (Call (fresh_name, vn, List.map (fun (v, _) -> v) sigma'), sigma', procd::e)
+      
     | Branches pcl ->
       let unrolled_tp = type_inst_converter types (unroll_type desttp) in
       let ltl = (match unrolled_tp with | With ltl -> ltl | _ -> raise (ClosureConversionError "Type error2")) in
@@ -161,11 +174,11 @@ let rec convert_cmd (types : tpdefn list) (gamma : context) (pname : procname) (
       let ((sigma, e), npcl) = List.fold_left_map
           (fun (sigma, e) -> fun (p, c) ->
              match p with
-             | InjPat (l, d) ->
+            | InjPat (l, d) ->
                let t = contains ltl l in
                let () = set_count 0 in
-               let (c', sigma', e') = convert_cmd types gamma fresh_name t c in
-               ((join sigma sigma', List.append e e'), (InjPat (l, d), c'))
+               let (c', sigma', e') = convert_cmd types ((d, t)::gamma) fresh_name t c in
+               ((join sigma (remove sigma' d), List.append e e'), (InjPat (l, d), c'))
              | _ -> raise (ClosureConversionError "Type error3")) ([], []) pcl
       in
       let () = set_count num in
@@ -190,6 +203,7 @@ let convert_program (program : env) : env =
     match program with
     | [] -> acc
     | (ProcDefn (pn, (dest, desttp), pl, c))::program ->
+      let () = print_endline pn in
       let () = set_count 0 in
       (match c with
        | Write (_, s) ->
@@ -203,6 +217,12 @@ let convert_program (program : env) : env =
             let (pd, dt) = (match dt with | Arrow (t1, t2) -> (t1, t2) | _ -> raise (ClosureConversionError "Type Error4")) in
             let (c', _, e) = convert_cmd types ((p, pd)::pl) pn dt c in
             let pd = ProcDefn (pn, (dest, desttp), pl, Write (dest, Branches [(PairPat (p, d), c')])) in
+            inner program (acc @ (pd::e))
+          | Branches [(ShiftPat v, c)] ->
+            let innertp = type_inst_converter types (unroll_type desttp) in
+            let innertp = (match innertp with | Up t -> t | _ -> raise (ClosureConversionError "Type Error4.5")) in
+            let (c', _, e) = convert_cmd types ((v, innertp)::pl) pn innertp c in
+            let pd = ProcDefn (pn, (dest, desttp), pl, Write (dest, Branches [(ShiftPat v, c')])) in
             inner program (acc @ (pd::e))
           | Branches pcl ->
             let ltl = (match (type_inst_converter types (unroll_type desttp)) with | With ltl -> ltl | _ -> raise (ClosureConversionError "Type Error5")) in
