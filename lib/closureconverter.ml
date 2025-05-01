@@ -131,6 +131,12 @@ let rec join (c1 : context) (c2 : context) : context =
   in
   inner c1 c2 []
 
+let rec print_context (c : context) : string =
+  match c with
+  | [] -> "DONE"
+  | ((x, t)::c) ->
+    (x ^ " : " ^ (Saxast.Print.pp_tp t) ^ "\n" ^ (print_context c))
+
 let rec convert_cmd (types : tpdefn list) (gamma : context) (pname : procname) (desttp : tp) (c : cmd) : cmd * context * env =
   let find = contains gamma in
   match c with
@@ -156,15 +162,17 @@ let rec convert_cmd (types : tpdefn list) (gamma : context) (pname : procname) (
               let t = contains ltl l in
               let (c', sigma', e') = convert_cmd types ((v, t)::gamma) pname desttp c in
               ((join sigma (remove sigma' v), e @ e'), (p, c'))
+              
             | ShiftPat v ->
               let t = (match tp with | Down t -> t | _ -> raise (ClosureConversionError "Reading error2")) in
               let (c', sigma', e') = convert_cmd types ((v, t)::gamma) pname desttp c in
               ((join sigma (remove sigma' v), e @ e'), (p, c'))
+              
             | VarPat v ->
               let (c', sigma', e') = convert_cmd types ((v, tp)::gamma) pname desttp c in
               ((join sigma (remove sigma' v), e @ e'), (p, c'))) ([], []) pcl
        in
-       (Read (vn, Branches npcl), (vn, find vn)::sigma, e))
+       (Read (vn, Branches npcl), join [(vn, find vn)] sigma, e))
   | Write (vn, s) ->
     (match s with
     | Small (PairPat (v1, v2)) -> (c, [(v1, find v1); (v2, find v2)], [])
