@@ -1,44 +1,17 @@
-type nat[k] = +{'zero : 1, 'succ : nat[k]}
-type calc[k] = &{
-   'add : nat[k] -> calc[k],
-   'multiply : nat[k] -> calc[k],
-   'subtract : nat[k] -> calc[k]
-}
+type nat[m] = +{ 'z: 1, 's: nat[m] }
+type stream[m] = &{ 'next: nat[m] * stream[m] }
+type list[m] = +{ 'cons: nat[m] * list[m], 'nil: 1 }
 
-defn addition : nat -> nat -> nat = fun n1 => fun n2 =>
-    match n1 with
-    | 'zero u => match u with | () => n2 end
-    | 'succ n => 'succ (addition n n2)
+defn add_nat (x : nat) (y : nat) : nat =
+    match x, y with
+        | 'z (), y => y
+        | 's x, y => 's (add_nat x y)
     end
-inst addition : nat[U] -> nat[U] -> nat[U]
 
-defn multiplication : nat -> nat -> nat = fun n1 => fun n2 =>
-    match n1 with
-    | 'zero u => 'zero u
-    | 'succ n => addition n2 (multiplication n n2)
+defn fib_stream_helper (a : nat) (b : nat) : stream =
+    record
+    | 'next =>
+        match (b, b) with
+        | b1, b2 => (add_nat a b1, fib_stream_helper b2 (add_nat a b1))
+        end
     end
-inst multiplication : nat[U] -> nat[U] -> nat[U]
-
-defn subtract (x : nat) (y : nat) : nat =
-    match x with
-    | 'zero() => 'zero ()
-    | 'succ n =>
-        match y with
-	| 'zero() => 'succ n
-	| 'succ m => subtract n m
-	end
-    end
-inst subtract (x : nat[U]) (y : nat[U]) : nat[U]
-
-defn calculator : nat -> calc = fun start => record
-| 'add => (fun n => calculator (addition start start))
-| 'multiply => (fun n => calculator (multiplication start n))
-| 'subtract => (fun n => calculator (subtract start n))
-end
-inst calculator : nat[U] -> calc[U]
-
-defn five : nat[U] = 'succ('succ('succ('succ('succ('zero())))))
-defn fivecalc : calc[U] = calculator five
-defn tencalc : calc[U] = fivecalc.'add five
-defn zerocalc : calc[U] = fivecalc.'subtract five
-defn twentyfivecalc : calc[U] = fivecalc.'multiply five

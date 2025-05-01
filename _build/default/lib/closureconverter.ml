@@ -142,7 +142,7 @@ let rec convert_cmd (types : tpdefn list) (gamma : context) (pname : procname) (
   match c with
   | Read (vn, s) ->
     (match s with
-     | Small (PairPat (x, _)) ->  (c, [(x, find x); (vn, find vn)], [])
+     | Small (PairPat (x, _)) ->  (c, join [(x, find x)] [(vn, find vn)], [])
      | Small _ -> (c, [(vn, find vn)], [])
      | Branches pcl ->
        let tp = unroll_type (type_inst_converter types (find vn)) in
@@ -175,7 +175,7 @@ let rec convert_cmd (types : tpdefn list) (gamma : context) (pname : procname) (
        (Read (vn, Branches npcl), join [(vn, find vn)] sigma, e))
   | Write (vn, s) ->
     (match s with
-    | Small (PairPat (v1, v2)) -> (c, [(v1, find v1); (v2, find v2)], [])
+    | Small (PairPat (v1, v2)) -> (c, join [(v1, find v1)] [(v2, find v2)], [])
     | Small UnitPat -> (c, [], [])
     | Small (InjPat (_, v)) -> (c, [(v, find v)], [])
     | Small (ShiftPat v) -> (c, [(v, find v)], [])
