@@ -136,7 +136,8 @@ let rec convert_cmd (types : tpdefn list) (gamma : context) (pname : procname) (
   match c with
   | Read (vn, s) ->
     (match s with
-     | Small _ ->  (c, [(vn, find vn)], [])
+     | Small (PairPat (x, _)) ->  (c, [(x, find x); (vn, find vn)], [])
+     | Small _ -> (c, [(vn, find vn)], [])
      | Branches pcl ->
        let tp = unroll_type (type_inst_converter types (find vn)) in
        let ((sigma, e), npcl) = 

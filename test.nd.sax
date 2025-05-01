@@ -1,42 +1,396 @@
-type bool[m] = [m](+{'true : [m](1), 'false : [m](1)})
+proc test2fin$0 (s$230 : nat[L])  =
+    cut s$231 : [L](([L](<[L](^(nat[L]))>) -> nat[L])) {
+        call test2out$0 s$231 
+    }
+    cut s$232 : [L](<[L](^(nat[L]))>) {
+        call test2$0 s$232 
+    }
+    read s$231 (s$232, s$230)
 
-type char[m] = [m](+{'b0 : [m](1), 'b1 : [m](1)})
 
-type str[m] = [m](+{'nil : [m](1), 'cons : [m]((char[m] * str[m]))})
+proc test2$0 (s$211 : [L](<[L](^(nat[L]))>))  =
+    cut s$213 : broader_suspense[L L] {
+        cut s$215 : normal_suspended[L L] {
+            cut s$217 : broader_suspense[L L] {
+                cut s$218 : [L]((nat[L] * [L]((nat[L] -> nat[L])))) {
+                    cut s$219 : nat[L] {
+                        cut s$225 : [L](1) {
+                            write s$225 ()
+                        }
+                        write s$219 'zero(s$225)
+                    }
+                    cut s$220 : [L]((nat[L] -> nat[L])) {
+                        call test2$0_1 s$220 
+                    }
+                    write s$218 (s$219, s$220)
+                }
+                write s$217 <s$218>
+            }
+            call bto$1 s$215 s$217
+        }
+        call bfrom$0 s$213 s$215
+    }
+    call bto$1 s$211 s$213
 
-type automaton[m] = [m](&{'accepts : bool[m], 'step : [m]((char[m] -> automaton[m]))})
-
-proc run_automaton$0 (s$1 : [L]((automaton[L] -> [L]((str[L] -> bool[L])))))  =
-    write s$1 {
-    | (a, s$2) => call run_automaton$0_1 s$2 a
+proc test2$0_1 (d$0 : [L]((nat[L] -> nat[L])))  =
+    write d$0 {
+    | (z, s$221) => cut s$222 : nat[L] {
+                        cut s$223 : nat[L] {
+                            write s$223 'succ(z)
+                        }
+                        write s$222 'succ(s$223)
+                    }
+                    write s$221 'succ(s$222)
     }
 
-proc run_automaton$0_1 (d$0 : [L]((str[L] -> bool[L]))) (a : automaton[L]) =
+proc test$0 (s$197 : nat[L])  =
+    cut s$200 : suspense[L] {
+        cut s$202 : also_suspended[L] {
+            cut s$204 : suspense[L] {
+                cut s$205 : nat[L] {
+                    cut s$210 : [L](1) {
+                        write s$210 ()
+                    }
+                    write s$205 'zero(s$210)
+                }
+                cut s$206 : [L]((nat[L] -> nat[L])) {
+                    call test$0_1 s$206 
+                }
+                write s$204 (s$205, s$206)
+            }
+            call to2$0 s$202 s$204
+        }
+        call from2$0 s$200 s$202
+    }
+    cut s$198 : also_suspended[L] {
+        call to$0 s$198 s$200
+    }
+    read s$198 <s$197>
+
+
+proc test$0_1 (d$0 : [L]((nat[L] -> nat[L])))  =
     write d$0 {
-    | (s, s$3) => read s {
-                  | 'nil(n$2) => read n$2 {
-                                 | () => read a 'accepts(s$3)
+    | (z, s$207) => cut s$208 : nat[L] {
+                        write s$208 'succ(z)
+                    }
+                    write s$207 'succ(s$208)
+    }
 
-                                 }
-                  | 'cons(n$2) => read n$2 {
-                                  | (n$9, n$10) => cut s$19 : [L]((automaton[L] -> [L]((str[L] -> bool[L])))) {
-                                                       call run_automaton$0 s$19 
-                                                   }
-                                                   cut s$20 : automaton[L] {
-                                                       cut s$24 : [L]((char[L] -> automaton[L])) {
-                                                           read a 'step(s$24)
+proc bfrom$0 (s$180 : broader_suspense[L L]) (s : normal_suspended[L L]) =
+    cut s$181 : [L]((nat[L] * [L]((nat[L] -> nat[L])))) {
+        cut s$182 : nat[L] {
+            cut s$196 : [L](1) {
+                write s$196 ()
+            }
+            write s$182 'zero(s$196)
+        }
+        cut s$183 : [L]((nat[L] -> nat[L])) {
+            call bfrom$0_1 s$183 s
+        }
+        write s$181 (s$182, s$183)
+    }
+    write s$180 <s$181>
 
-                                                       }
-                                                       read s$24 (n$9, s$20)
+proc bfrom$0_1 (d$0 : [L]((nat[L] -> nat[L]))) (s : normal_suspended[L L]) =
+    write d$0 {
+    | (n, s$184) => read n {
+                    | 'zero(n$7) => read n$7 {
+                                    | () => read s {
+                                            | <n$11> => read n$11 <s$184>
 
-                                                   }
-                                                   cut s$21 : [L]((str[L] -> bool[L])) {
-                                                       read s$19 (s$20, s$21)
+                                            }
+                                    }
+                    | 'succ(n$7) => call die2$0 s$184 n$7 s
+                    }
+    }
 
-                                                   }
-                                                   read s$21 (n$10, s$3)
+proc die2$3 (s$167 : nat[U]) (y : nat[U]) (s : normal_suspended[U U]) =
+    call die2$3 s$167 y s
 
+proc die2$2 (s$167 : nat[A]) (y : nat[A]) (s : normal_suspended[A A]) =
+    call die2$2 s$167 y s
+
+proc die2$1 (s$167 : nat[S]) (y : nat[S]) (s : normal_suspended[S S]) =
+    call die2$1 s$167 y s
+
+proc die2$0 (s$167 : nat[L]) (y : nat[L]) (s : normal_suspended[L L]) =
+    call die2$0 s$167 y s
+
+proc bto$1 (s$144 : normal_suspended[L L]) (c : broader_suspense[L L]) =
+    read c {
+    | <n$18> => read n$18 {
+                | (n$24, n$25) => cut s$163 : [L](^(nat[L])) {
+                                      call bto$1_1 s$163 n$25 n$24
                                   }
-                  }
+                                  write s$144 <s$163>
+                }
+    }
+
+proc bto$1_1 (d$0 : [L](^(nat[L]))) (n$25 : [L]((nat[L] -> nat[L]))) (n$24 : nat[L]) =
+    write d$0 {
+    | <s$164> => read n$25 (n$24, s$164)
+
+    }
+
+proc bto$0 (s$144 : normal_suspended[L S]) (c : broader_suspense[L S]) =
+    read c {
+    | <n$18> => read n$18 {
+                | (n$24, n$25) => cut s$152 : [S](^(nat[S])) {
+                                      call bto$0_1 s$152 n$25 n$24
+                                  }
+                                  write s$144 <s$152>
+                }
+    }
+
+proc bto$0_1 (d$0 : [S](^(nat[S]))) (n$25 : [S]((nat[S] -> nat[S]))) (n$24 : nat[S]) =
+    write d$0 {
+    | <s$153> => read n$25 (n$24, s$153)
+
+    }
+
+proc from2$3 (s$87 : suspense[A]) (s : also_suspended[A]) =
+    cut s$130 : nat[A] {
+        cut s$143 : [A](1) {
+            write s$143 ()
+        }
+        write s$130 'zero(s$143)
+    }
+    cut s$131 : [A]((nat[A] -> nat[A])) {
+        call from2$3_1 s$131 s
+    }
+    write s$87 (s$130, s$131)
+
+proc from2$3_1 (d$0 : [A]((nat[A] -> nat[A]))) (s : also_suspended[A]) =
+    write d$0 {
+    | (n, s$132) => read n {
+                    | 'zero(n$37) => read n$37 {
+                                     | () => read s <s$132>
+
+                                     }
+                    | 'succ(n$37) => call die$2 s$132 n$37 s
+                    }
+    }
+
+proc from2$2 (s$87 : suspense[S]) (s : also_suspended[S]) =
+    cut s$116 : nat[S] {
+        cut s$129 : [S](1) {
+            write s$129 ()
+        }
+        write s$116 'zero(s$129)
+    }
+    cut s$117 : [S]((nat[S] -> nat[S])) {
+        call from2$2_1 s$117 s
+    }
+    write s$87 (s$116, s$117)
+
+proc from2$2_1 (d$0 : [S]((nat[S] -> nat[S]))) (s : also_suspended[S]) =
+    write d$0 {
+    | (n, s$118) => read n {
+                    | 'zero(n$37) => read n$37 {
+                                     | () => read s <s$118>
+
+                                     }
+                    | 'succ(n$37) => call die$1 s$118 n$37 s
+                    }
+    }
+
+proc from2$1 (s$87 : suspense[U]) (s : also_suspended[U]) =
+    cut s$102 : nat[U] {
+        cut s$115 : [U](1) {
+            write s$115 ()
+        }
+        write s$102 'zero(s$115)
+    }
+    cut s$103 : [U]((nat[U] -> nat[U])) {
+        call from2$1_1 s$103 s
+    }
+    write s$87 (s$102, s$103)
+
+proc from2$1_1 (d$0 : [U]((nat[U] -> nat[U]))) (s : also_suspended[U]) =
+    write d$0 {
+    | (n, s$104) => read n {
+                    | 'zero(n$37) => read n$37 {
+                                     | () => read s <s$104>
+
+                                     }
+                    | 'succ(n$37) => call die$3 s$104 n$37 s
+                    }
+    }
+
+proc from2$0 (s$87 : suspense[L]) (s : also_suspended[L]) =
+    cut s$88 : nat[L] {
+        cut s$101 : [L](1) {
+            write s$101 ()
+        }
+        write s$88 'zero(s$101)
+    }
+    cut s$89 : [L]((nat[L] -> nat[L])) {
+        call from2$0_1 s$89 s
+    }
+    write s$87 (s$88, s$89)
+
+proc from2$0_1 (d$0 : [L]((nat[L] -> nat[L]))) (s : also_suspended[L]) =
+    write d$0 {
+    | (n, s$90) => read n {
+                   | 'zero(n$37) => read n$37 {
+                                    | () => read s <s$90>
+
+                                    }
+                   | 'succ(n$37) => call die$0 s$90 n$37 s
+                   }
+    }
+
+proc die$3 (s$74 : nat[U]) (y : nat[U]) (s : also_suspended[U]) =
+    call die$3 s$74 y s
+
+proc die$2 (s$74 : nat[A]) (y : nat[A]) (s : also_suspended[A]) =
+    call die$2 s$74 y s
+
+proc die$1 (s$74 : nat[S]) (y : nat[S]) (s : also_suspended[S]) =
+    call die$1 s$74 y s
+
+proc die$0 (s$74 : nat[L]) (y : nat[L]) (s : also_suspended[L]) =
+    call die$0 s$74 y s
+
+proc from$1 (s$59 : suspense[U]) (s : also_suspended[U]) =
+    cut s$67 : nat[U] {
+        cut s$71 : nat[U] {
+            cut s$72 : nat[U] {
+                cut s$73 : [U](1) {
+                    write s$73 ()
+                }
+                write s$72 'zero(s$73)
+            }
+            write s$71 'succ(s$72)
+        }
+        write s$67 'succ(s$71)
+    }
+    cut s$68 : [U]((nat[U] -> nat[U])) {
+        call from$1_1 s$68 s
+    }
+    write s$59 (s$67, s$68)
+
+proc from$1_1 (d$0 : [U]((nat[U] -> nat[U]))) (s : also_suspended[U]) =
+    write d$0 {
+    | (n, s$69) => read s <s$69>
+
+    }
+
+proc from$0 (s$59 : suspense[A]) (s : also_suspended[A]) =
+    cut s$60 : nat[A] {
+        cut s$64 : nat[A] {
+            cut s$65 : nat[A] {
+                cut s$66 : [A](1) {
+                    write s$66 ()
+                }
+                write s$65 'zero(s$66)
+            }
+            write s$64 'succ(s$65)
+        }
+        write s$60 'succ(s$64)
+    }
+    cut s$61 : [A]((nat[A] -> nat[A])) {
+        call from$0_1 s$61 s
+    }
+    write s$59 (s$60, s$61)
+
+proc from$0_1 (d$0 : [A]((nat[A] -> nat[A]))) (s : also_suspended[A]) =
+    write d$0 {
+    | (n, s$62) => read s <s$62>
+
+    }
+
+proc to$3 (s$1 : also_suspended[U]) (c : suspense[U]) =
+    read c {
+    | (n$52, n$53) => call to$3_1 s$1 n$53 n$52
+    }
+
+proc to$3_1 (d$0 : also_suspended[U]) (n$53 : [U]((nat[U] -> nat[U]))) (n$52 : nat[U]) =
+    write d$0 {
+    | <s$27> => read n$53 (n$52, s$27)
+
+    }
+
+proc to$2 (s$1 : also_suspended[A]) (c : suspense[A]) =
+    read c {
+    | (n$52, n$53) => call to$2_1 s$1 n$53 n$52
+    }
+
+proc to$2_1 (d$0 : also_suspended[A]) (n$53 : [A]((nat[A] -> nat[A]))) (n$52 : nat[A]) =
+    write d$0 {
+    | <s$20> => read n$53 (n$52, s$20)
+
+    }
+
+proc to$1 (s$1 : also_suspended[S]) (c : suspense[S]) =
+    read c {
+    | (n$52, n$53) => call to$1_1 s$1 n$53 n$52
+    }
+
+proc to$1_1 (d$0 : also_suspended[S]) (n$53 : [S]((nat[S] -> nat[S]))) (n$52 : nat[S]) =
+    write d$0 {
+    | <s$13> => read n$53 (n$52, s$13)
+
+    }
+
+proc to$0 (s$1 : also_suspended[L]) (c : suspense[L]) =
+    read c {
+    | (n$52, n$53) => call to$0_1 s$1 n$53 n$52
+    }
+
+proc to$0_1 (d$0 : also_suspended[L]) (n$53 : [L]((nat[L] -> nat[L]))) (n$52 : nat[L]) =
+    write d$0 {
+    | <s$6> => read n$53 (n$52, s$6)
+
+    }
+
+type nat[m] = [m](+{'zero : [m](1), 'succ : nat[m]})
+
+type suspense[m] = [m]((nat[m] * [m]((nat[m] -> nat[m]))))
+
+type also_suspended[m] = [m](^(nat[m]))
+
+type broader_suspense[m k] = [m](<[k]((nat[k] * [k]((nat[k] -> nat[k]))))>)
+
+type normal_suspended[m k] = [m](<[k](^(nat[k]))>)
+
+proc to2$0 (s$30 : also_suspended[L]) (c : suspense[L]) =
+    write s$30 {
+    | <s$31> => read c {
+                | (n$43, n$44) => read n$44 (n$43, s$31)
+
+                }
+    }
+
+proc to2$1 (s$30 : also_suspended[S]) (c : suspense[S]) =
+    write s$30 {
+    | <s$38> => read c {
+                | (n$43, n$44) => read n$44 (n$43, s$38)
+
+                }
+    }
+
+proc to2$2 (s$30 : also_suspended[A]) (c : suspense[A]) =
+    write s$30 {
+    | <s$45> => read c {
+                | (n$43, n$44) => read n$44 (n$43, s$45)
+
+                }
+    }
+
+proc to2$3 (s$30 : also_suspended[U]) (c : suspense[U]) =
+    write s$30 {
+    | <s$52> => read c {
+                | (n$43, n$44) => read n$44 (n$43, s$52)
+
+                }
+    }
+
+proc test2out$0 (s$226 : [L](([L](<[L](^(nat[L]))>) -> nat[L])))  =
+    write s$226 {
+    | (x, s$227) => read x {
+                    | <n$2> => read n$2 <s$227>
+
+                    }
     }
 
