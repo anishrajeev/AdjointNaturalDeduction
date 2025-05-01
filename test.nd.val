@@ -1,8 +1,0 @@
-value main$0 = 'cons (<'succ 'succ 'zero ()>, 'nil ())
-value sieve_list_t$0 = 'cons (<'succ 'succ 'zero ()>, 'nil ())
-value four_all$0 = 'cons (<'succ 'succ 'zero ()>, 'nil ())
-value zero_t$0 = 'zero ()
-value four$0 = 'succ 'succ 'zero ()
-value two$0 = 'succ 'succ 'zero ()
-value one$0 = 'succ 'zero ()
-value null_filter$0 = clos

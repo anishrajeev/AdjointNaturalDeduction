@@ -181,25 +181,25 @@ let rec compile_cmd (types : tpdefn list) (desttp : tp) (c : cmd) (prefix : stri
       v1 ^ "->fun = " ^ v2 ^ "->fun;\n" ^
       "(" ^ v1 ^ "+1)->env = (" ^ v2 ^ "+1)->env;\n"
     | Int32 ->
-      v1 ^ "->int = " ^ v2 ^ "->int;\n"
+      v1 ^ "->i = " ^ v2 ^ "->i;\n"
     | _ -> raise (CError "Issue w unrolling")) ^
     prefix ^ v1 ^ " = " ^ v2 ^ ";\n"
   | Call (pn, d, pl) ->
     prefix ^ pn ^ "(" ^ String.concat ", " (d::pl) ^ ");\n"
   | Add (d, x, y) ->
-    prefix ^ d ^ "->int = (" ^ x ^ "->int) + (" ^ y ^ "->int);\n"
+    prefix ^ d ^ "->i = (" ^ x ^ "->i) + (" ^ y ^ "->i);\n"
   | Minus (d, x, y) ->
-    prefix ^ d ^ "->int = (" ^ x ^ "->int) - (" ^ y ^ "->int);\n"
+    prefix ^ d ^ "->i = (" ^ x ^ "->i) - (" ^ y ^ "->i);\n"
   | Div (d, x, y) ->
-    prefix ^ d ^ "->int = (" ^ x ^ "->int) / (" ^ y ^ "->int);\n"
+    prefix ^ d ^ "->i = (" ^ x ^ "->i) / (" ^ y ^ "->i);\n"
   | Mult (d, x, y) ->
-    prefix ^ d ^ "->int = (" ^ x ^ "->int) * (" ^ y ^ "->int);\n"
+    prefix ^ d ^ "->i = (" ^ x ^ "->i) * (" ^ y ^ "->i);\n"
   | Eq (d, x, y) ->
-    prefix ^ d ^ "->tag = ((" ^ x ^ "->int) = (" ^ y ^ "->int)) ? TAG_true : TAG_false;\n" ^
+    prefix ^ d ^ "->tag = ((" ^ x ^ "->i) = (" ^ y ^ "->i)) ? TAG_true : TAG_false;\n" ^
     prefix ^ "addr _" ^ d ^ " = NULL;\n" ^
     prefix ^ d ^ "->ptr = _" ^ d ^ ";\n"
   | Set (d, i) ->
-    prefix ^ d ^ "->int = " ^ string_of_int i ^ ";\n"
+    prefix ^ d ^ "->i = " ^ string_of_int i ^ ";\n"
   | Close (cn, vn, vl) ->
     prefix ^ cn ^ "(" ^ String.concat ", " (vn::vl) ^ ");\n"
 let compile_proc (types : tpdefn list) (pn : procname) ((d, dt) : parm) (pl : parm list) (c : cmd) =
@@ -309,7 +309,7 @@ let rec generate_print_defined_types (program : env) : string =
     | TpInst (name, _) ->
       "print$" ^ name ^ "(" ^ v ^ ");\n"
     | Int32 ->
-      "printf(\"%d\", " ^ v ^ "->int);\n"
+      "printf(\"%d\", " ^ v ^ "->i);\n"
   in
   match program with
     | [] -> ""

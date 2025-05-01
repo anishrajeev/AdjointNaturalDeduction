@@ -1,137 +1,33 @@
-type nat[m] = +{'zero: 1, 'succ: nat[m]}
 type bool[m] = +{'true : 1, 'false : 1}
-type list[m k] = +{'nil : 1, 'cons: <nat[k]> * list[m k]}
-type filter[m k l] = &{'filter: <nat[k]>, 'extract: <list[l k]>}
-type some[m] = +{'some: nat[m], 'none: [m]1}
+type list[m k] = +{'nil : 1, 'cons: <[k]int32> * list[m k]}
+type filter[m k l] = &{'filter: <[k]int32>, 'extract: <list[l k]>}
 
-defn succ (x:nat[U]) : nat[U] = 'succ x
-defn add (x:nat[U]) (y:nat[U]) : nat[U] = 
-    match x with
-    | 'zero() => consume_nat (dealloc_nat y) x
-    | 'succ(x) => succ (add x y)
-    end
-defn pred (x:nat[U]) : nat[U] = 
-    match x with
-    | 'zero() => 'zero()
-    | 'succ(x) => x
-    end
-defn sub (x:nat[U]) (y:nat[U]) : nat[U] = 
-    match y with
-    | 'zero() => x
-    | 'succ(y) => pred (sub x y)
-    end
+defn succ (x:[U]int32) : [U]int32 = x + 1
+defn add (x:[U]int32) (y:[U]int32) : [U]int32 =  x + y
+defn pred (x:[U]int32) : [U]int32 =  x - 1
+defn sub (x:[U]int32) (y:[U]int32) : [U]int32 =  x - y
 
-defn dealloc_nat (x:nat[U]) : [U]1 = 
-    match x with
-    | 'succ(x) => dealloc_nat x
-    | 'zero() => ()
-    end
+defn mul (x:[U]int32) (y:[U]int32) : [U]int32 =  x * y
 
-defn consume_nat (u:[U]1) (res:nat[U]) : nat[U] = res
-defn consume_bool (u:[U]1) (res:bool[U]) : bool[U] = res
-defn consume_list (u:[U]1) (res:list[U U]) : list[U U] = res
+defn square (x:[U]int32) : [U]int32 = mul x x
 
-defn mul (x:nat[U]) (y:nat[U]) : nat[U] = 
-    match x with
-    | 'zero() => consume_nat (dealloc_nat x) (consume_nat (dealloc_nat y) ('zero()))
-    | 'succ(x) => add y (mul x y)
-    end
+defn equal (x:[U]int32) (y:[U]int32) : bool = x = y
 
-defn square (x:nat[U]) : nat[U] = mul x x
+defn leq (x:[U]int32) (y:[U]int32) : bool =
+match (x = 0, y = 0) with
+| ('true (), 'true()) => 'true()
+| ('false (), 'true()) => 'false()
+| ('false (), 'false ()) => leq (x - 1) (y - 1)
+| ('true (), 'false()) => 'true()
+end
 
-defn equal (x:nat[U]) (y:nat[U]) : bool = 
-    match x,y with
-    | 'zero(),'zero() => 'true()
-    | 'zero(), 'succ(y) => consume_bool (dealloc_nat y) ('false())
-    | 'succ(x), 'zero() => consume_bool (dealloc_nat x) ('false())
-    | 'succ(x), 'succ(y) => equal x y
-    end
+defn lt (x:[U]int32) (y:[U]int32) : bool =
+lt_helper x y (leq x y)
 
-defn leq (x:nat[U]) (y:nat[U]) : bool = 
-    match x,y with
-    | 'zero(),'zero() => 'true()
-    | 'zero(), 'succ(y) => consume_bool (dealloc_nat y) ('true())
-    | 'succ(x), 'zero() => consume_bool (dealloc_nat x) ('false())
-    | 'succ(x), 'succ(y) => leq x y
-    end
-defn lt (x:nat[U]) (y:nat[U]) : bool = 
-    match x,y with
-    | 'zero(),'zero() => 'false()
-    | 'zero(), 'succ(y) => consume_bool (dealloc_nat y) ('true())
-    | 'succ(x), 'zero() => consume_bool (dealloc_nat x) ('false())
-    | 'succ(x), 'succ(y) => lt x y
-    end
-
-defn sieve_list_helper_helper (res:bool[U]) (x:nat[U]) (n:nat[U]) : list[U U] = 
-    match res with
-    | 'true() => 'cons (<x>,sieve_list_helper (succ x) n)
-    | 'false() => consume_list (dealloc_nat n) (consume_list (dealloc_nat x) ('nil()))
-    end
-defn sieve_list_helper (x:nat[U]) (n:nat[U]) : list[U U] = 
-    sieve_list_helper_helper (leq (square x) n) x n
-
-defn sieve_list (n:nat[U]) : list[U U] = 
-    sieve_list_helper ('succ ('succ 'zero ())) n
-
-defn all_list (n:nat[U]) : list[U U] = 
-    sieve_list_helper ('succ ('succ 'zero ())) (square n)
-defn null_filter : (nat[U] -> some[U]) = 
-    fun x => 'some x
-
-defn some_if (n:nat[U]) (cond:bool[U]) : some[U] = 
-    match cond with
-    | 'true() => 'some n
-    | 'false() => 'none ()
-    end
-
-defn bind (x:some[U]) (f:(nat[U] -> some[U])) : some[U] = 
-    match x with
-    | 'some x => f x
-    | 'none() => 'none()
-    end
-
-defn if (c:bool[U]) (then:bool[U]) (else:[U]1 -> bool[U]) : bool[U] = 
-    match c with
-    | 'true() => then
-    | 'false() => else ()
-    end
-
-defn is_factor_of (x:nat[U]) (n:nat[U]) : bool[U] = 
-    if (equal x n) ('true()) (fun u => if (lt x n) ('false ()) (fun u => is_factor_of x (sub x n)))
-
-defn filter_for (n:nat) (cont:(nat[U] -> some[U])) : (nat[U] -> some[U]) = 
-    fun x => 
-            bind (some_if n (is_factor_of n x)) cont 
-defn construct_filter_from_list (factors:list[U U]) : (nat[U] -> some[U]) = 
-    match factors with
-    | 'nil () => null_filter
-    | 'cons (<x>, factors) => filter_for x (construct_filter_from_list factors)
-    end
-
-defn cons_if_some (x:some[U]) (l:list[U U]) : list[U U]= 
-    match x with
-    | 'some(x) => 'cons(<x>,l)
-    | 'none() => l
-    end
-
-defn filter_list (l:list[U U]) (f:nat[U] -> some[U]) : list[U U]= 
-    match l with
-    | 'nil () => 'nil ()
-    | 'cons(<x>,l) => cons_if_some (f x) (filter_list l f)
-    end
-
-defn primes (n:nat[U]) : list[U U] = 
-    filter_list (all_list n) (construct_filter_from_list (sieve_list n))
-
-defn one : nat[U] = 'succ ('zero ())
-
-defn two : nat[U] = 
-    'succ (one)
-
-defn four : nat[U] = mul two two
-defn zero_t : nat[U] = mul two ('zero ())
-defn four_all : list[U U] = all_list four
-defn sieve_list_t : list[U U] = sieve_list four
-
-defn main : list[U U] = 
-    primes (mul (mul two two) (mul two two))
+defn lt_helper (x:[U]int32) (y:[U]int32) (leq : bool[U]) : bool =
+match (leq, x = y) with
+| ('true (), 'false ()) => 'true ()
+| ('true (), 'true ()) => 'false ()
+| ('false (), 'true ()) => 'false ()
+| ('false (), 'false ()) => 'false ()
+end

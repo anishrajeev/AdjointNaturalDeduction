@@ -1,542 +1,145 @@
-type nat[m] = [m](+{'zero : [m](1), 'succ : nat[m]})
-
 type bool[m] = [m](+{'true : [m](1), 'false : [m](1)})
 
-type list[m k] = [m](+{'nil : [m](1), 'cons : [m](([m](<nat[k]>) * list[m k]))})
+type list[m k] = [m](+{'nil : [m](1), 'cons : [m](([m](<[k](int32)>) * list[m k]))})
 
-type filter[m k l] = [m](&{'filter : [m](<nat[k]>), 'extract : [m](<list[l k]>)})
+type filter[m k l] = [m](&{'filter : [m](<[k](int32)>), 'extract : [m](<list[l k]>)})
 
-type some[m] = [m](+{'some : nat[m], 'none : [m](1)})
-
-proc main$0 (s$447 : list[U U])  =
-    cut s$449 : nat[U] {
-        cut s$451 : nat[U] {
-            cut s$459 : nat[U] {
-                call two$0 s$459 
-            }
-            cut s$460 : nat[U] {
-                call two$0 s$460 
-            }
-            call mul$0 s$451 s$459 s$460
+proc lt_helper$0 (s$80 : bool[U]) (x : [U](int32)) (y : [U](int32)) (leq : bool[U]) =
+    cut s$81 : [U]((bool[U] * [U](+{'true : [U](1), 'false : [U](1)}))) {
+        cut s$83 : [U](+{'true : [U](1), 'false : [U](1)}) {
+            eq s$83 x y
         }
-        cut s$452 : nat[U] {
-            cut s$454 : nat[U] {
-                call two$0 s$454 
-            }
-            cut s$455 : nat[U] {
-                call two$0 s$455 
-            }
-            call mul$0 s$452 s$454 s$455
-        }
-        call mul$0 s$449 s$451 s$452
-    }
-    call primes$0 s$447 s$449
-
-proc sieve_list_t$0 (s$443 : list[U U])  =
-    cut s$445 : nat[U] {
-        call four$0 s$445 
-    }
-    call sieve_list$0 s$443 s$445
-
-proc four_all$0 (s$439 : list[U U])  =
-    cut s$441 : nat[U] {
-        call four$0 s$441 
-    }
-    call all_list$0 s$439 s$441
-
-proc zero_t$0 (s$433 : nat[U])  =
-    cut s$435 : nat[U] {
-        call two$0 s$435 
-    }
-    cut s$436 : nat[U] {
-        cut s$437 : [U](1) {
-            write s$437 ()
-        }
-        write s$436 'zero(s$437)
-    }
-    call mul$0 s$433 s$435 s$436
-
-proc four$0 (s$427 : nat[U])  =
-    cut s$429 : nat[U] {
-        call two$0 s$429 
-    }
-    cut s$430 : nat[U] {
-        call two$0 s$430 
-    }
-    call mul$0 s$427 s$429 s$430
-
-proc two$0 (s$424 : nat[U])  =
-    cut s$425 : nat[U] {
-        call one$0 s$425 
-    }
-    write s$424 'succ(s$425)
-
-proc one$0 (s$421 : nat[U])  =
-    cut s$422 : nat[U] {
-        cut s$423 : [U](1) {
-            write s$423 ()
-        }
-        write s$422 'zero(s$423)
-    }
-    write s$421 'succ(s$422)
-
-proc primes$0 (s$411 : list[U U]) (n : nat[U]) =
-    cut s$413 : list[U U] {
-        call all_list$0 s$413 n
-    }
-    cut s$414 : [U]((nat[U] -> some[U])) {
-        cut s$416 : list[U U] {
-            call sieve_list$0 s$416 n
-        }
-        call construct_filter_from_list$0 s$414 s$416
-    }
-    call filter_list$0 s$411 s$413 s$414
-
-proc filter_list$0 (s$386 : list[U U]) (l : list[U U]) (f : [U]((nat[U] -> some[U]))) =
-    read l {
-    | 'nil(n$2) => read n$2 {
-                   | () => cut s$391 : [U](1) {
-                               write s$391 ()
-                           }
-                           write s$386 'nil(s$391)
-                   }
-    | 'cons(n$2) => read n$2 {
-                    | (n$10, n$11) => read n$10 {
-                                      | <n$19> => cut s$404 : some[U] {
-                                                      read f (n$19, s$404)
-
-                                                  }
-                                                  cut s$405 : list[U U] {
-                                                      call filter_list$0 s$405 n$11 f
-                                                  }
-                                                  call cons_if_some$0 s$386 s$404 s$405
-                                      }
-                    }
-    }
-
-proc cons_if_some$0 (s$375 : list[U U]) (x : some[U]) (l : list[U U]) =
-    read x {
-    | 'some(n$28) => cut s$380 : [U](([U](<nat[U]>) * list[U U])) {
-                         cut s$381 : [U](<nat[U]>) {
-                             write s$381 <n$28>
-                         }
-                         write s$380 (s$381, l)
-                     }
-                     write s$375 'cons(s$380)
-    | 'none(n$28) => read n$28 {
-                     | () => id s$375 l
-                     }
-    }
-
-proc construct_filter_from_list$0 (s$353 : [U]((nat[U] -> some[U]))) (factors : list[U U]) =
-    read factors {
-    | 'nil(n$34) => read n$34 {
-                    | () => call null_filter$0 s$353 
-                    }
-    | 'cons(n$34) => read n$34 {
-                     | (n$42, n$43) => read n$42 {
-                                       | <n$51> => cut s$372 : [U]((nat[U] -> some[U])) {
-                                                       call construct_filter_from_list$0 s$372 n$43
-                                                   }
-                                                   call filter_for$0 s$353 n$51 s$372
-                                       }
-                     }
-    }
-
-proc filter_for$0 (s$342 : [U]((nat[U] -> some[U]))) (n : nat[U]) (cont : [U]((nat[U] -> some[U]))) =
-    close filter_for$0_1 s$342 n cont
-
-clos filter_for$0_1 (d$0 : [U]((nat[U] -> some[U]))) (n : nat[U]) (cont : [U]((nat[U] -> some[U]))) =
-    write d$0 {
-    | (x, s$343) => cut s$345 : some[U] {
-                        cut s$349 : bool[U] {
-                            call is_factor_of$0 s$349 n x
-                        }
-                        call some_if$0 s$345 n s$349
-                    }
-                    call bind$0 s$343 s$345 cont
-    }
-
-proc is_factor_of$0 (s$317 : bool[U]) (x : nat[U]) (n : nat[U]) =
-    cut s$319 : bool[U] {
-        call equal$0 s$319 x n
-    }
-    cut s$320 : bool[U] {
-        cut s$338 : [U](1) {
-            write s$338 ()
-        }
-        write s$320 'true(s$338)
-    }
-    cut s$321 : [U](([U](1) -> bool[U])) {
-        close is_factor_of$0_1 s$321 x n
-    }
-    call if$0 s$317 s$319 s$320 s$321
-
-clos is_factor_of$0_1 (d$0 : [U](([U](1) -> bool[U]))) (x : nat[U]) (n : nat[U]) =
-    write d$0 {
-    | (u, s$322) => cut s$324 : bool[U] {
-                        call lt$0 s$324 x n
-                    }
-                    cut s$325 : bool[U] {
-                        cut s$334 : [U](1) {
-                            write s$334 ()
-                        }
-                        write s$325 'false(s$334)
-                    }
-                    cut s$326 : [U](([U](1) -> bool[U])) {
-                        close is_factor_of$0_1_1 s$326 x n
-                    }
-                    call if$0 s$322 s$324 s$325 s$326
-    }
-
-clos is_factor_of$0_1_1 (d$0 : [U](([U](1) -> bool[U]))) (x : nat[U]) (n : nat[U]) =
-    write d$0 {
-    | (u, s$327) => cut s$330 : nat[U] {
-                        call sub$0 s$330 x n
-                    }
-                    call is_factor_of$0 s$327 x s$330
-    }
-
-proc if$0 (s$308 : bool[U]) (c : bool[U]) (then : bool[U]) (else : [U](([U](1) -> bool[U]))) =
-    read c {
-    | 'true(n$60) => read n$60 {
-                     | () => id s$308 then
-                     }
-    | 'false(n$60) => read n$60 {
-                      | () => cut s$315 : [U](1) {
-                                  write s$315 ()
-                              }
-                              read else (s$315, s$308)
-
-                      }
-    }
-
-proc bind$0 (s$298 : some[U]) (x : some[U]) (f : [U]((nat[U] -> some[U]))) =
-    read x {
-    | 'some(n$64) => read f (n$64, s$298)
-
-    | 'none(n$64) => read n$64 {
-                     | () => cut s$307 : [U](1) {
-                                 write s$307 ()
-                             }
-                             write s$298 'none(s$307)
-                     }
-    }
-
-proc some_if$0 (s$289 : some[U]) (n : nat[U]) (cond : bool[U]) =
-    read cond {
-    | 'true(n$70) => read n$70 {
-                     | () => write s$289 'some(n)
-                     }
-    | 'false(n$70) => read n$70 {
-                      | () => cut s$297 : [U](1) {
-                                  write s$297 ()
-                              }
-                              write s$289 'none(s$297)
-                      }
-    }
-
-proc null_filter$0 (s$286 : [U]((nat[U] -> some[U])))  =
-    close null_filter$0_1 s$286 
-
-clos null_filter$0_1 (d$0 : [U]((nat[U] -> some[U])))  =
-    write d$0 {
-    | (x, s$287) => write s$287 'some(x)
-    }
-
-proc all_list$0 (s$277 : list[U U]) (n : nat[U]) =
-    cut s$279 : nat[U] {
-        cut s$283 : nat[U] {
-            cut s$284 : nat[U] {
-                cut s$285 : [U](1) {
-                    write s$285 ()
-                }
-                write s$284 'zero(s$285)
-            }
-            write s$283 'succ(s$284)
-        }
-        write s$279 'succ(s$283)
-    }
-    cut s$280 : nat[U] {
-        call square$0 s$280 n
-    }
-    call sieve_list_helper$0 s$277 s$279 s$280
-
-proc sieve_list$0 (s$270 : list[U U]) (n : nat[U]) =
-    cut s$272 : nat[U] {
-        cut s$274 : nat[U] {
-            cut s$275 : nat[U] {
-                cut s$276 : [U](1) {
-                    write s$276 ()
-                }
-                write s$275 'zero(s$276)
-            }
-            write s$274 'succ(s$275)
-        }
-        write s$272 'succ(s$274)
-    }
-    call sieve_list_helper$0 s$270 s$272 n
-
-proc sieve_list_helper$0 (s$260 : list[U U]) (x : nat[U]) (n : nat[U]) =
-    cut s$262 : bool[U] {
-        cut s$266 : nat[U] {
-            call square$0 s$266 x
-        }
-        call leq$0 s$262 s$266 n
-    }
-    call sieve_list_helper_helper$0 s$260 s$262 x n
-
-proc sieve_list_helper_helper$0 (s$233 : list[U U]) (res : bool[U]) (x : nat[U]) (n : nat[U]) =
-    read res {
-    | 'true(n$74) => read n$74 {
-                     | () => cut s$238 : [U](([U](<nat[U]>) * list[U U])) {
-                                 cut s$239 : [U](<nat[U]>) {
-                                     write s$239 <x>
-                                 }
-                                 cut s$240 : list[U U] {
-                                     cut s$242 : nat[U] {
-                                         call succ$0 s$242 x
-                                     }
-                                     call sieve_list_helper$0 s$240 s$242 n
-                                 }
-                                 write s$238 (s$239, s$240)
-                             }
-                             write s$233 'cons(s$238)
-                     }
-    | 'false(n$74) => read n$74 {
-                      | () => cut s$250 : [U](1) {
-                                  call dealloc_nat$0 s$250 n
-                              }
-                              cut s$251 : list[U U] {
-                                  cut s$253 : [U](1) {
-                                      call dealloc_nat$0 s$253 x
-                                  }
-                                  cut s$254 : list[U U] {
-                                      cut s$255 : [U](1) {
-                                          write s$255 ()
-                                      }
-                                      write s$254 'nil(s$255)
-                                  }
-                                  call consume_list$0 s$251 s$253 s$254
-                              }
-                              call consume_list$0 s$233 s$250 s$251
-                      }
-    }
-
-proc lt$0 (s$182 : bool[U]) (x : nat[U]) (y : nat[U]) =
-    cut s$183 : [U]((nat[U] * nat[U])) {
-        write s$183 (x, y)
-    }
-    read s$183 {
-    | (n$78, n$79) => read n$78 {
-                      | 'zero(n$87) => read n$87 {
-                                       | () => read n$79 {
-                                               | 'zero(n$94) => read n$94 {
-                                                                | () => cut s$199 : [U](1) {
-                                                                            write s$199 ()
-                                                                        }
-                                                                        write s$182 'false(s$199)
-                                                                }
-                                               | 'succ(n$94) => cut s$205 : [U](1) {
-                                                                    call dealloc_nat$0 s$205 n$94
-                                                                }
-                                                                cut s$206 : bool[U] {
-                                                                    cut s$207 : [U](1) {
-                                                                        write s$207 ()
-                                                                    }
-                                                                    write s$206 'true(s$207)
-                                                                }
-                                                                call consume_bool$0 s$182 s$205 s$206
-                                               }
-                                       }
-                      | 'succ(n$87) => read n$79 {
-                                       | 'zero(n$109) => read n$109 {
-                                                         | () => cut s$221 : [U](1) {
-                                                                     call dealloc_nat$0 s$221 n$87
-                                                                 }
-                                                                 cut s$222 : bool[U] {
-                                                                     cut s$223 : [U](1) {
-                                                                         write s$223 ()
-                                                                     }
-                                                                     write s$222 'false(s$223)
-                                                                 }
-                                                                 call consume_bool$0 s$182 s$221 s$222
-                                                         }
-                                       | 'succ(n$109) => call lt$0 s$182 n$87 n$109
-                                       }
-                      }
-    }
-
-proc leq$0 (s$131 : bool[U]) (x : nat[U]) (y : nat[U]) =
-    cut s$132 : [U]((nat[U] * nat[U])) {
-        write s$132 (x, y)
-    }
-    read s$132 {
-    | (n$120, n$121) => read n$120 {
-                        | 'zero(n$129) => read n$129 {
-                                          | () => read n$121 {
-                                                  | 'zero(n$136) => read n$136 {
-                                                                    | () => cut s$148 : [U](1) {
-                                                                                write s$148 ()
-                                                                            }
-                                                                            write s$131 'true(s$148)
-                                                                    }
-                                                  | 'succ(n$136) => cut s$154 : [U](1) {
-                                                                        call dealloc_nat$0 s$154 n$136
-                                                                    }
-                                                                    cut s$155 : bool[U] {
-                                                                        cut s$156 : [U](1) {
-                                                                            write s$156 ()
-                                                                        }
-                                                                        write s$155 'true(s$156)
-                                                                    }
-                                                                    call consume_bool$0 s$131 s$154 s$155
-                                                  }
-                                          }
-                        | 'succ(n$129) => read n$121 {
-                                          | 'zero(n$151) => read n$151 {
-                                                            | () => cut s$170 : [U](1) {
-                                                                        call dealloc_nat$0 s$170 n$129
-                                                                    }
-                                                                    cut s$171 : bool[U] {
-                                                                        cut s$172 : [U](1) {
-                                                                            write s$172 ()
-                                                                        }
-                                                                        write s$171 'false(s$172)
-                                                                    }
-                                                                    call consume_bool$0 s$131 s$170 s$171
-                                                            }
-                                          | 'succ(n$151) => call leq$0 s$131 n$129 n$151
-                                          }
-                        }
-    }
-
-proc equal$0 (s$80 : bool[U]) (x : nat[U]) (y : nat[U]) =
-    cut s$81 : [U]((nat[U] * nat[U])) {
-        write s$81 (x, y)
+        write s$81 (leq, s$83)
     }
     read s$81 {
-    | (n$162, n$163) => read n$162 {
-                        | 'zero(n$171) => read n$171 {
-                                          | () => read n$163 {
-                                                  | 'zero(n$178) => read n$178 {
-                                                                    | () => cut s$97 : [U](1) {
-                                                                                write s$97 ()
-                                                                            }
-                                                                            write s$80 'true(s$97)
-                                                                    }
-                                                  | 'succ(n$178) => cut s$103 : [U](1) {
-                                                                        call dealloc_nat$0 s$103 n$178
-                                                                    }
-                                                                    cut s$104 : bool[U] {
-                                                                        cut s$105 : [U](1) {
-                                                                            write s$105 ()
+    | (n$2, n$3) => read n$2 {
+                    | 'true(n$8) => read n$8 {
+                                    | () => read n$3 {
+                                            | 'true(n$15) => read n$15 {
+                                                             | () => cut s$99 : [U](1) {
+                                                                         write s$99 ()
+                                                                     }
+                                                                     write s$80 'false(s$99)
+                                                             }
+                                            | 'false(n$15) => read n$15 {
+                                                              | () => cut s$104 : [U](1) {
+                                                                          write s$104 ()
+                                                                      }
+                                                                      write s$80 'true(s$104)
+                                                              }
+                                            }
+                                    }
+                    | 'false(n$8) => read n$8 {
+                                     | () => read n$3 {
+                                             | 'true(n$28) => read n$28 {
+                                                              | () => cut s$115 : [U](1) {
+                                                                          write s$115 ()
+                                                                      }
+                                                                      write s$80 'false(s$115)
+                                                              }
+                                             | 'false(n$28) => read n$28 {
+                                                               | () => cut s$120 : [U](1) {
+                                                                           write s$120 ()
+                                                                       }
+                                                                       write s$80 'false(s$120)
+                                                               }
+                                             }
+                                     }
+                    }
+    }
+
+proc lt$0 (s$72 : bool[U]) (x : [U](int32)) (y : [U](int32)) =
+    cut s$76 : bool[U] {
+        call leq$0 s$76 x y
+    }
+    call lt_helper$0 s$72 x y s$76
+
+proc leq$0 (s$23 : bool[U]) (x : [U](int32)) (y : [U](int32)) =
+    cut s$24 : [U](([U](+{'true : [U](1), 'false : [U](1)}) * [U](+{'true : [U](1), 'false : [U](1)}))) {
+        cut s$25 : [U](+{'true : [U](1), 'false : [U](1)}) {
+            cut s$30 : [U](int32) {
+                set s$30 0
+            }
+            eq s$25 x s$30
+        }
+        cut s$26 : [U](+{'true : [U](1), 'false : [U](1)}) {
+            cut s$28 : [U](int32) {
+                set s$28 0
+            }
+            eq s$26 y s$28
+        }
+        write s$24 (s$25, s$26)
+    }
+    read s$24 {
+    | (n$38, n$39) => read n$38 {
+                      | 'true(n$44) => read n$44 {
+                                       | () => read n$39 {
+                                               | 'true(n$51) => read n$51 {
+                                                                | () => cut s$44 : [U](1) {
+                                                                            write s$44 ()
                                                                         }
-                                                                        write s$104 'false(s$105)
-                                                                    }
-                                                                    call consume_bool$0 s$80 s$103 s$104
-                                                  }
-                                          }
-                        | 'succ(n$171) => read n$163 {
-                                          | 'zero(n$193) => read n$193 {
-                                                            | () => cut s$119 : [U](1) {
-                                                                        call dealloc_nat$0 s$119 n$171
-                                                                    }
-                                                                    cut s$120 : bool[U] {
-                                                                        cut s$121 : [U](1) {
-                                                                            write s$121 ()
-                                                                        }
-                                                                        write s$120 'false(s$121)
-                                                                    }
-                                                                    call consume_bool$0 s$80 s$119 s$120
-                                                            }
-                                          | 'succ(n$193) => call equal$0 s$80 n$171 n$193
-                                          }
-                        }
+                                                                        write s$23 'true(s$44)
+                                                                }
+                                               | 'false(n$51) => read n$51 {
+                                                                 | () => cut s$49 : [U](1) {
+                                                                             write s$49 ()
+                                                                         }
+                                                                         write s$23 'true(s$49)
+                                                                 }
+                                               }
+                                       }
+                      | 'false(n$44) => read n$44 {
+                                        | () => read n$39 {
+                                                | 'true(n$64) => read n$64 {
+                                                                 | () => cut s$60 : [U](1) {
+                                                                             write s$60 ()
+                                                                         }
+                                                                         write s$23 'false(s$60)
+                                                                 }
+                                                | 'false(n$64) => read n$64 {
+                                                                  | () => cut s$66 : [U](int32) {
+                                                                              cut s$71 : [U](int32) {
+                                                                                  set s$71 1
+                                                                              }
+                                                                              minus s$66 x s$71
+                                                                          }
+                                                                          cut s$67 : [U](int32) {
+                                                                              cut s$69 : [U](int32) {
+                                                                                  set s$69 1
+                                                                              }
+                                                                              minus s$67 y s$69
+                                                                          }
+                                                                          call leq$0 s$23 s$66 s$67
+                                                                  }
+                                                }
+                                        }
+                      }
     }
 
-proc square$0 (s$76 : nat[U]) (x : nat[U]) =
-    call mul$0 s$76 x x
+proc equal$0 (s$20 : bool[U]) (x : [U](int32)) (y : [U](int32)) =
+    eq s$20 x y
 
-proc mul$0 (s$52 : nat[U]) (x : nat[U]) (y : nat[U]) =
-    read x {
-    | 'zero(n$204) => read n$204 {
-                      | () => cut s$58 : [U](1) {
-                                  call dealloc_nat$0 s$58 x
-                              }
-                              cut s$59 : nat[U] {
-                                  cut s$61 : [U](1) {
-                                      call dealloc_nat$0 s$61 y
-                                  }
-                                  cut s$62 : nat[U] {
-                                      cut s$63 : [U](1) {
-                                          write s$63 ()
-                                      }
-                                      write s$62 'zero(s$63)
-                                  }
-                                  call consume_nat$0 s$59 s$61 s$62
-                              }
-                              call consume_nat$0 s$52 s$58 s$59
-                      }
-    | 'succ(n$204) => cut s$72 : nat[U] {
-                          call mul$0 s$72 n$204 y
-                      }
-                      call add$0 s$52 y s$72
+proc square$0 (s$16 : [U](int32)) (x : [U](int32)) =
+    call mul$0 s$16 x x
+
+proc mul$0 (s$13 : [U](int32)) (x : [U](int32)) (y : [U](int32)) =
+    mult s$13 x y
+
+proc sub$0 (s$10 : [U](int32)) (x : [U](int32)) (y : [U](int32)) =
+    minus s$10 x y
+
+proc pred$0 (s$7 : [U](int32)) (x : [U](int32)) =
+    cut s$9 : [U](int32) {
+        set s$9 1
     }
+    minus s$7 x s$9
 
-proc consume_list$0 (s$51 : list[U U]) (u : [U](1)) (res : list[U U]) =
-    id s$51 res
+proc add$0 (s$4 : [U](int32)) (x : [U](int32)) (y : [U](int32)) =
+    add s$4 x y
 
-proc consume_bool$0 (s$50 : bool[U]) (u : [U](1)) (res : bool[U]) =
-    id s$50 res
-
-proc consume_nat$0 (s$49 : nat[U]) (u : [U](1)) (res : nat[U]) =
-    id s$49 res
-
-proc dealloc_nat$0 (s$40 : [U](1)) (x : nat[U]) =
-    read x {
-    | 'zero(n$210) => read n$210 {
-                      | () => write s$40 ()
-                      }
-    | 'succ(n$210) => call dealloc_nat$0 s$40 n$210
+proc succ$0 (s$1 : [U](int32)) (x : [U](int32)) =
+    cut s$3 : [U](int32) {
+        set s$3 1
     }
-
-proc sub$0 (s$28 : nat[U]) (x : nat[U]) (y : nat[U]) =
-    read y {
-    | 'zero(n$216) => read n$216 {
-                      | () => id s$28 x
-                      }
-    | 'succ(n$216) => cut s$36 : nat[U] {
-                          call sub$0 s$36 x n$216
-                      }
-                      call pred$0 s$28 s$36
-    }
-
-proc pred$0 (s$20 : nat[U]) (x : nat[U]) =
-    read x {
-    | 'zero(n$222) => read n$222 {
-                      | () => cut s$25 : [U](1) {
-                                  write s$25 ()
-                              }
-                              write s$20 'zero(s$25)
-                      }
-    | 'succ(n$222) => id s$20 n$222
-    }
-
-proc add$0 (s$3 : nat[U]) (x : nat[U]) (y : nat[U]) =
-    read x {
-    | 'zero(n$228) => read n$228 {
-                      | () => cut s$9 : [U](1) {
-                                  call dealloc_nat$0 s$9 y
-                              }
-                              call consume_nat$0 s$3 s$9 x
-                      }
-    | 'succ(n$228) => cut s$16 : nat[U] {
-                          call add$0 s$16 n$228 y
-                      }
-                      call succ$0 s$3 s$16
-    }
-
-proc succ$0 (s$1 : nat[U]) (x : nat[U]) =
-    write s$1 'succ(x)
+    add s$1 x s$3
 
