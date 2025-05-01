@@ -195,9 +195,7 @@ let rec compile_cmd (types : tpdefn list) (desttp : tp) (c : cmd) (prefix : stri
   | Mult (d, x, y) ->
     prefix ^ d ^ "->i = (" ^ x ^ "->i) * (" ^ y ^ "->i);\n"
   | Eq (d, x, y) ->
-    prefix ^ d ^ "->tag = ((" ^ x ^ "->i) = (" ^ y ^ "->i)) ? TAG_true : TAG_false;\n" ^
-    prefix ^ "addr _" ^ d ^ " = NULL;\n" ^
-    prefix ^ d ^ "->ptr = _" ^ d ^ ";\n"
+    prefix ^ d ^ "->tag = ((" ^ x ^ "->i) == (" ^ y ^ "->i)) ? TAG_true : TAG_false;\n"
   | Set (d, i) ->
     prefix ^ d ^ "->i = " ^ string_of_int i ^ ";\n"
   | Close (cn, vn, vl) ->

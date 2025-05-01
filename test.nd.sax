@@ -4,142 +4,167 @@ type list[m k] = [m](+{'nil : [m](1), 'cons : [m](([m](<[k](int32)>) * list[m k]
 
 type filter[m k l] = [m](&{'filter : [m](<[k](int32)>), 'extract : [m](<list[l k]>)})
 
-proc lt_helper$0 (s$80 : bool[U]) (x : [U](int32)) (y : [U](int32)) (leq : bool[U]) =
-    cut s$81 : [U]((bool[U] * [U](+{'true : [U](1), 'false : [U](1)}))) {
-        cut s$83 : [U](+{'true : [U](1), 'false : [U](1)}) {
-            eq s$83 x y
-        }
-        write s$81 (leq, s$83)
+proc four_all$0 (s$132 : list[U U])  =
+    cut s$134 : [U](int32) {
+        set s$134 4
     }
-    read s$81 {
-    | (n$2, n$3) => read n$2 {
-                    | 'true(n$8) => read n$8 {
-                                    | () => read n$3 {
-                                            | 'true(n$15) => read n$15 {
-                                                             | () => cut s$99 : [U](1) {
-                                                                         write s$99 ()
-                                                                     }
-                                                                     write s$80 'false(s$99)
-                                                             }
-                                            | 'false(n$15) => read n$15 {
-                                                              | () => cut s$104 : [U](1) {
-                                                                          write s$104 ()
-                                                                      }
-                                                                      write s$80 'true(s$104)
-                                                              }
-                                            }
+    call all_list$0 s$132 s$134
+
+proc all_list$0 (s$126 : list[U U]) (n : [U](int32)) =
+    cut s$128 : [U](int32) {
+        set s$128 2
+    }
+    cut s$129 : [U](int32) {
+        mult s$129 n n
+    }
+    call sieve_list_helper$0 s$126 s$128 s$129
+
+proc sieve_list_helper$0 (s$116 : list[U U]) (x : [U](int32)) (n : [U](int32)) =
+    cut s$118 : bool[U] {
+        cut s$122 : [U](int32) {
+            mult s$122 x x
+        }
+        call leq$0 s$118 s$122 n
+    }
+    call sieve_list_helper_helper$0 s$116 s$118 x n
+
+proc sieve_list_helper_helper$0 (s$99 : list[U U]) (res : bool[U]) (x : [U](int32)) (n : [U](int32)) =
+    read res {
+    | 'true(n$2) => read n$2 {
+                    | () => cut s$104 : [U](([U](<[U](int32)>) * list[U U])) {
+                                cut s$105 : [U](<[U](int32)>) {
+                                    write s$105 <x>
+                                }
+                                cut s$106 : list[U U] {
+                                    cut s$108 : [U](int32) {
+                                        cut s$111 : [U](int32) {
+                                            set s$111 1
+                                        }
+                                        add s$108 x s$111
                                     }
-                    | 'false(n$8) => read n$8 {
-                                     | () => read n$3 {
-                                             | 'true(n$28) => read n$28 {
-                                                              | () => cut s$115 : [U](1) {
-                                                                          write s$115 ()
+                                    call sieve_list_helper$0 s$106 s$108 n
+                                }
+                                write s$104 (s$105, s$106)
+                            }
+                            write s$99 'cons(s$104)
+                    }
+    | 'false(n$2) => read n$2 {
+                     | () => cut s$115 : [U](1) {
+                                 write s$115 ()
+                             }
+                             write s$99 'nil(s$115)
+                     }
+    }
+
+proc lt_helper$0 (s$58 : bool[U]) (x : [U](int32)) (y : [U](int32)) (leq : bool[U]) =
+    cut s$59 : [U]((bool[U] * [U](+{'true : [U](1), 'false : [U](1)}))) {
+        cut s$61 : [U](+{'true : [U](1), 'false : [U](1)}) {
+            eq s$61 x y
+        }
+        write s$59 (leq, s$61)
+    }
+    read s$59 {
+    | (n$6, n$7) => read n$6 {
+                    | 'true(n$12) => read n$12 {
+                                     | () => read n$7 {
+                                             | 'true(n$19) => read n$19 {
+                                                              | () => cut s$77 : [U](1) {
+                                                                          write s$77 ()
                                                                       }
-                                                                      write s$80 'false(s$115)
+                                                                      write s$58 'false(s$77)
                                                               }
-                                             | 'false(n$28) => read n$28 {
-                                                               | () => cut s$120 : [U](1) {
-                                                                           write s$120 ()
+                                             | 'false(n$19) => read n$19 {
+                                                               | () => cut s$82 : [U](1) {
+                                                                           write s$82 ()
                                                                        }
-                                                                       write s$80 'false(s$120)
+                                                                       write s$58 'true(s$82)
                                                                }
                                              }
                                      }
+                    | 'false(n$12) => read n$12 {
+                                      | () => read n$7 {
+                                              | 'true(n$32) => read n$32 {
+                                                               | () => cut s$93 : [U](1) {
+                                                                           write s$93 ()
+                                                                       }
+                                                                       write s$58 'false(s$93)
+                                                               }
+                                              | 'false(n$32) => read n$32 {
+                                                                | () => cut s$98 : [U](1) {
+                                                                            write s$98 ()
+                                                                        }
+                                                                        write s$58 'false(s$98)
+                                                                }
+                                              }
+                                      }
                     }
     }
 
-proc lt$0 (s$72 : bool[U]) (x : [U](int32)) (y : [U](int32)) =
-    cut s$76 : bool[U] {
-        call leq$0 s$76 x y
+proc lt$0 (s$50 : bool[U]) (x : [U](int32)) (y : [U](int32)) =
+    cut s$54 : bool[U] {
+        call leq$0 s$54 x y
     }
-    call lt_helper$0 s$72 x y s$76
+    call lt_helper$0 s$50 x y s$54
 
-proc leq$0 (s$23 : bool[U]) (x : [U](int32)) (y : [U](int32)) =
-    cut s$24 : [U](([U](+{'true : [U](1), 'false : [U](1)}) * [U](+{'true : [U](1), 'false : [U](1)}))) {
-        cut s$25 : [U](+{'true : [U](1), 'false : [U](1)}) {
-            cut s$30 : [U](int32) {
-                set s$30 0
+proc leq$0 (s$1 : bool[U]) (x : [U](int32)) (y : [U](int32)) =
+    cut s$2 : [U](([U](+{'true : [U](1), 'false : [U](1)}) * [U](+{'true : [U](1), 'false : [U](1)}))) {
+        cut s$3 : [U](+{'true : [U](1), 'false : [U](1)}) {
+            cut s$8 : [U](int32) {
+                set s$8 0
             }
-            eq s$25 x s$30
+            eq s$3 x s$8
         }
-        cut s$26 : [U](+{'true : [U](1), 'false : [U](1)}) {
-            cut s$28 : [U](int32) {
-                set s$28 0
+        cut s$4 : [U](+{'true : [U](1), 'false : [U](1)}) {
+            cut s$6 : [U](int32) {
+                set s$6 0
             }
-            eq s$26 y s$28
+            eq s$4 y s$6
         }
-        write s$24 (s$25, s$26)
+        write s$2 (s$3, s$4)
     }
-    read s$24 {
-    | (n$38, n$39) => read n$38 {
-                      | 'true(n$44) => read n$44 {
-                                       | () => read n$39 {
-                                               | 'true(n$51) => read n$51 {
-                                                                | () => cut s$44 : [U](1) {
-                                                                            write s$44 ()
+    read s$2 {
+    | (n$42, n$43) => read n$42 {
+                      | 'true(n$48) => read n$48 {
+                                       | () => read n$43 {
+                                               | 'true(n$55) => read n$55 {
+                                                                | () => cut s$22 : [U](1) {
+                                                                            write s$22 ()
                                                                         }
-                                                                        write s$23 'true(s$44)
+                                                                        write s$1 'true(s$22)
                                                                 }
-                                               | 'false(n$51) => read n$51 {
-                                                                 | () => cut s$49 : [U](1) {
-                                                                             write s$49 ()
+                                               | 'false(n$55) => read n$55 {
+                                                                 | () => cut s$27 : [U](1) {
+                                                                             write s$27 ()
                                                                          }
-                                                                         write s$23 'true(s$49)
+                                                                         write s$1 'true(s$27)
                                                                  }
                                                }
                                        }
-                      | 'false(n$44) => read n$44 {
-                                        | () => read n$39 {
-                                                | 'true(n$64) => read n$64 {
-                                                                 | () => cut s$60 : [U](1) {
-                                                                             write s$60 ()
+                      | 'false(n$48) => read n$48 {
+                                        | () => read n$43 {
+                                                | 'true(n$68) => read n$68 {
+                                                                 | () => cut s$38 : [U](1) {
+                                                                             write s$38 ()
                                                                          }
-                                                                         write s$23 'false(s$60)
+                                                                         write s$1 'false(s$38)
                                                                  }
-                                                | 'false(n$64) => read n$64 {
-                                                                  | () => cut s$66 : [U](int32) {
-                                                                              cut s$71 : [U](int32) {
-                                                                                  set s$71 1
+                                                | 'false(n$68) => read n$68 {
+                                                                  | () => cut s$44 : [U](int32) {
+                                                                              cut s$49 : [U](int32) {
+                                                                                  set s$49 1
                                                                               }
-                                                                              minus s$66 x s$71
+                                                                              minus s$44 x s$49
                                                                           }
-                                                                          cut s$67 : [U](int32) {
-                                                                              cut s$69 : [U](int32) {
-                                                                                  set s$69 1
+                                                                          cut s$45 : [U](int32) {
+                                                                              cut s$47 : [U](int32) {
+                                                                                  set s$47 1
                                                                               }
-                                                                              minus s$67 y s$69
+                                                                              minus s$45 y s$47
                                                                           }
-                                                                          call leq$0 s$23 s$66 s$67
+                                                                          call leq$0 s$1 s$44 s$45
                                                                   }
                                                 }
                                         }
                       }
     }
-
-proc equal$0 (s$20 : bool[U]) (x : [U](int32)) (y : [U](int32)) =
-    eq s$20 x y
-
-proc square$0 (s$16 : [U](int32)) (x : [U](int32)) =
-    call mul$0 s$16 x x
-
-proc mul$0 (s$13 : [U](int32)) (x : [U](int32)) (y : [U](int32)) =
-    mult s$13 x y
-
-proc sub$0 (s$10 : [U](int32)) (x : [U](int32)) (y : [U](int32)) =
-    minus s$10 x y
-
-proc pred$0 (s$7 : [U](int32)) (x : [U](int32)) =
-    cut s$9 : [U](int32) {
-        set s$9 1
-    }
-    minus s$7 x s$9
-
-proc add$0 (s$4 : [U](int32)) (x : [U](int32)) (y : [U](int32)) =
-    add s$4 x y
-
-proc succ$0 (s$1 : [U](int32)) (x : [U](int32)) =
-    cut s$3 : [U](int32) {
-        set s$3 1
-    }
-    add s$1 x s$3
 

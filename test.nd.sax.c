@@ -67,16 +67,13 @@ void invoke_closure_record (addr a, tag k, addr b) {
 void print$bool(addr val$);
 void print$list(addr val$);
 void print$filter(addr val$);
-void lt_helper$0(addr s$80, addr x, addr y, addr leq);
-void lt$0(addr s$72, addr x, addr y);
-void leq$0(addr s$23, addr x, addr y);
-void equal$0(addr s$20, addr x, addr y);
-void square$0(addr s$16, addr x);
-void mul$0(addr s$13, addr x, addr y);
-void sub$0(addr s$10, addr x, addr y);
-void pred$0(addr s$7, addr x);
-void add$0(addr s$4, addr x, addr y);
-void succ$0(addr s$1, addr x);
+void four_all$0(addr s$132);
+void all_list$0(addr s$126, addr n);
+void sieve_list_helper$0(addr s$116, addr x, addr n);
+void sieve_list_helper_helper$0(addr s$99, addr res, addr x, addr n);
+void lt_helper$0(addr s$58, addr x, addr y, addr leq);
+void lt$0(addr s$50, addr x, addr y);
+void leq$0(addr s$1, addr x, addr y);
 void print$bool(addr val$) {
 switch (val$->tag){
 case TAG_true:{
@@ -121,36 +118,90 @@ break;
 void print$filter(addr val$) {
 printf("clos");
 }
+void print$four_all$0(addr val$) {
+print$list(val$);
+}
 
-void lt_helper$0(addr s$80, addr x, addr y, addr leq) {
-	addr s$81 = alloc(2);
-	addr s$83 = alloc(2);
-	s$83->tag = ((x->i) = (y->i)) ? TAG_true : TAG_false;
-	addr _s$83 = NULL;
-	s$83->ptr = _s$83;
-	s$81->ptr = leq;
-	(s$81+1)->ptr = s$83;
-	addr n$2 = s$81->ptr;
-	addr n$3 = (s$81+1)->ptr;
-	switch (n$2->tag){
+void four_all$0(addr s$132) {
+	addr s$134 = alloc(1);
+	s$134->i = 4;
+	all_list$0(s$132, s$134);
+}
+
+void all_list$0(addr s$126, addr n) {
+	addr s$128 = alloc(1);
+	s$128->i = 2;
+	addr s$129 = alloc(1);
+	s$129->i = (n->i) * (n->i);
+	sieve_list_helper$0(s$126, s$128, s$129);
+}
+
+void sieve_list_helper$0(addr s$116, addr x, addr n) {
+	addr s$118 = alloc(2);
+	addr s$122 = alloc(1);
+	s$122->i = (x->i) * (x->i);
+	leq$0(s$118, s$122, n);
+	sieve_list_helper_helper$0(s$116, s$118, x, n);
+}
+
+void sieve_list_helper_helper$0(addr s$99, addr res, addr x, addr n) {
+	switch (res->tag){
 	case TAG_true:{
-		addr n$8 = (n$2+1)->ptr;
-		switch (n$3->tag){
+		addr n$2 = (res+1)->ptr;
+		addr s$104 = alloc(2);
+		addr s$105 = alloc(1);
+		s$105->ptr = x;
+		addr s$106 = alloc(2);
+		addr s$108 = alloc(1);
+		addr s$111 = alloc(1);
+		s$111->i = 1;
+		s$108->i = (x->i) + (s$111->i);
+		sieve_list_helper$0(s$106, s$108, n);
+		s$104->ptr = s$105;
+		(s$104+1)->ptr = s$106;
+		s$99->tag = TAG_cons;
+		(s$99+1)->ptr = s$104;
+		break;
+	}
+
+	case TAG_false:{
+		addr n$2 = (res+1)->ptr;
+		addr s$115 = alloc(0);
+		s$115 = NULL;
+		s$99->tag = TAG_nil;
+		(s$99+1)->ptr = s$115;
+		break;
+	}
+	}
+}
+
+void lt_helper$0(addr s$58, addr x, addr y, addr leq) {
+	addr s$59 = alloc(2);
+	addr s$61 = alloc(2);
+	s$61->tag = ((x->i) == (y->i)) ? TAG_true : TAG_false;
+	s$59->ptr = leq;
+	(s$59+1)->ptr = s$61;
+	addr n$6 = s$59->ptr;
+	addr n$7 = (s$59+1)->ptr;
+	switch (n$6->tag){
+	case TAG_true:{
+		addr n$12 = (n$6+1)->ptr;
+		switch (n$7->tag){
 		case TAG_true:{
-			addr n$15 = (n$3+1)->ptr;
-			addr s$99 = alloc(0);
-			s$99 = NULL;
-			s$80->tag = TAG_false;
-			(s$80+1)->ptr = s$99;
+			addr n$19 = (n$7+1)->ptr;
+			addr s$77 = alloc(0);
+			s$77 = NULL;
+			s$58->tag = TAG_false;
+			(s$58+1)->ptr = s$77;
 			break;
 		}
 
 		case TAG_false:{
-			addr n$15 = (n$3+1)->ptr;
-			addr s$104 = alloc(0);
-			s$104 = NULL;
-			s$80->tag = TAG_true;
-			(s$80+1)->ptr = s$104;
+			addr n$19 = (n$7+1)->ptr;
+			addr s$82 = alloc(0);
+			s$82 = NULL;
+			s$58->tag = TAG_true;
+			(s$58+1)->ptr = s$82;
 			break;
 		}
 		}
@@ -158,23 +209,23 @@ void lt_helper$0(addr s$80, addr x, addr y, addr leq) {
 	}
 
 	case TAG_false:{
-		addr n$8 = (n$2+1)->ptr;
-		switch (n$3->tag){
+		addr n$12 = (n$6+1)->ptr;
+		switch (n$7->tag){
 		case TAG_true:{
-			addr n$28 = (n$3+1)->ptr;
-			addr s$115 = alloc(0);
-			s$115 = NULL;
-			s$80->tag = TAG_false;
-			(s$80+1)->ptr = s$115;
+			addr n$32 = (n$7+1)->ptr;
+			addr s$93 = alloc(0);
+			s$93 = NULL;
+			s$58->tag = TAG_false;
+			(s$58+1)->ptr = s$93;
 			break;
 		}
 
 		case TAG_false:{
-			addr n$28 = (n$3+1)->ptr;
-			addr s$120 = alloc(0);
-			s$120 = NULL;
-			s$80->tag = TAG_false;
-			(s$80+1)->ptr = s$120;
+			addr n$32 = (n$7+1)->ptr;
+			addr s$98 = alloc(0);
+			s$98 = NULL;
+			s$58->tag = TAG_false;
+			(s$58+1)->ptr = s$98;
 			break;
 		}
 		}
@@ -183,49 +234,45 @@ void lt_helper$0(addr s$80, addr x, addr y, addr leq) {
 	}
 }
 
-void lt$0(addr s$72, addr x, addr y) {
-	addr s$76 = alloc(2);
-	leq$0(s$76, x, y);
-	lt_helper$0(s$72, x, y, s$76);
+void lt$0(addr s$50, addr x, addr y) {
+	addr s$54 = alloc(2);
+	leq$0(s$54, x, y);
+	lt_helper$0(s$50, x, y, s$54);
 }
 
-void leq$0(addr s$23, addr x, addr y) {
-	addr s$24 = alloc(2);
-	addr s$25 = alloc(2);
-	addr s$30 = alloc(1);
-	s$30->i = 0;
-	s$25->tag = ((x->i) = (s$30->i)) ? TAG_true : TAG_false;
-	addr _s$25 = NULL;
-	s$25->ptr = _s$25;
-	addr s$26 = alloc(2);
-	addr s$28 = alloc(1);
-	s$28->i = 0;
-	s$26->tag = ((y->i) = (s$28->i)) ? TAG_true : TAG_false;
-	addr _s$26 = NULL;
-	s$26->ptr = _s$26;
-	s$24->ptr = s$25;
-	(s$24+1)->ptr = s$26;
-	addr n$38 = s$24->ptr;
-	addr n$39 = (s$24+1)->ptr;
-	switch (n$38->tag){
+void leq$0(addr s$1, addr x, addr y) {
+	addr s$2 = alloc(2);
+	addr s$3 = alloc(2);
+	addr s$8 = alloc(1);
+	s$8->i = 0;
+	s$3->tag = ((x->i) == (s$8->i)) ? TAG_true : TAG_false;
+	addr s$4 = alloc(2);
+	addr s$6 = alloc(1);
+	s$6->i = 0;
+	s$4->tag = ((y->i) == (s$6->i)) ? TAG_true : TAG_false;
+	s$2->ptr = s$3;
+	(s$2+1)->ptr = s$4;
+	addr n$42 = s$2->ptr;
+	addr n$43 = (s$2+1)->ptr;
+	switch (n$42->tag){
 	case TAG_true:{
-		addr n$44 = (n$38+1)->ptr;
-		switch (n$39->tag){
+		addr n$48 = (n$42+1)->ptr;
+		switch (n$43->tag){
 		case TAG_true:{
-			addr n$51 = (n$39+1)->ptr;
-			addr s$44 = alloc(0);
-			s$44 = NULL;
-			s$23->tag = TAG_true;
-			(s$23+1)->ptr = s$44;
+			addr n$55 = (n$43+1)->ptr;
+			addr s$22 = alloc(0);
+			s$22 = NULL;
+			s$1->tag = TAG_true;
+			(s$1+1)->ptr = s$22;
 			break;
 		}
 
 		case TAG_false:{
-			addr n$51 = (n$39+1)->ptr;
-			addr s$49 = alloc(0);
-			s$49 = NULL;
-			s$23->tag = TAG_true;
-			(s$23+1)->ptr = s$49;
+			addr n$55 = (n$43+1)->ptr;
+			addr s$27 = alloc(0);
+			s$27 = NULL;
+			s$1->tag = TAG_true;
+			(s$1+1)->ptr = s$27;
 			break;
 		}
 		}
@@ -233,71 +280,42 @@ void leq$0(addr s$23, addr x, addr y) {
 	}
 
 	case TAG_false:{
-		addr n$44 = (n$38+1)->ptr;
-		switch (n$39->tag){
+		addr n$48 = (n$42+1)->ptr;
+		switch (n$43->tag){
 		case TAG_true:{
-			addr n$64 = (n$39+1)->ptr;
-			addr s$60 = alloc(0);
-			s$60 = NULL;
-			s$23->tag = TAG_false;
-			(s$23+1)->ptr = s$60;
+			addr n$68 = (n$43+1)->ptr;
+			addr s$38 = alloc(0);
+			s$38 = NULL;
+			s$1->tag = TAG_false;
+			(s$1+1)->ptr = s$38;
 			break;
 		}
 
 		case TAG_false:{
-			addr n$64 = (n$39+1)->ptr;
-			addr s$66 = alloc(1);
-			addr s$71 = alloc(1);
-			s$71->i = 1;
-			s$66->i = (x->i) - (s$71->i);
-			addr s$67 = alloc(1);
-			addr s$69 = alloc(1);
-			s$69->i = 1;
-			s$67->i = (y->i) - (s$69->i);
-			leq$0(s$23, s$66, s$67);
+			addr n$68 = (n$43+1)->ptr;
+			addr s$44 = alloc(1);
+			addr s$49 = alloc(1);
+			s$49->i = 1;
+			s$44->i = (x->i) - (s$49->i);
+			addr s$45 = alloc(1);
+			addr s$47 = alloc(1);
+			s$47->i = 1;
+			s$45->i = (y->i) - (s$47->i);
+			leq$0(s$1, s$44, s$45);
 			break;
 		}
 		}
 		break;
 	}
 	}
-}
-
-void equal$0(addr s$20, addr x, addr y) {
-	s$20->tag = ((x->i) = (y->i)) ? TAG_true : TAG_false;
-	addr _s$20 = NULL;
-	s$20->ptr = _s$20;
-}
-
-void square$0(addr s$16, addr x) {
-	mul$0(s$16, x, x);
-}
-
-void mul$0(addr s$13, addr x, addr y) {
-	s$13->i = (x->i) * (y->i);
-}
-
-void sub$0(addr s$10, addr x, addr y) {
-	s$10->i = (x->i) - (y->i);
-}
-
-void pred$0(addr s$7, addr x) {
-	addr s$9 = alloc(1);
-	s$9->i = 1;
-	s$7->i = (x->i) - (s$9->i);
-}
-
-void add$0(addr s$4, addr x, addr y) {
-	s$4->i = (x->i) + (y->i);
-}
-
-void succ$0(addr s$1, addr x) {
-	addr s$3 = alloc(1);
-	s$3->i = 1;
-	s$1->i = (x->i) + (s$3->i);
 }
 int main (){
 	init_heap(1024 * 1024);
 	freopen("test.nd.val", "w", stdout);
+	addr four_all$0$value = alloc(2);
+	four_all$0(four_all$0$value);
+	printf("value %s = ", "four_all$0");
+	print$four_all$0(four_all$0$value);
+	printf("\n");
 }
 
