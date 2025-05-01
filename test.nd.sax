@@ -1,12 +1,52 @@
-type nat[m] = [m](+{'zero : [m](1), 'succ : nat[m]})
-
-proc one$0 (s$1 : [U]((nat[U] -> [U]((nat[U] -> nat[U])))))  =
-    write s$1 {
-    | (x, s$2) => call one$0_1 s$2 
+proc four$0 (s$18 : nat[U])  =
+    cut s$20 : nat[U] {
+        cut s$27 : nat[U] {
+            cut s$28 : nat[U] {
+                cut s$29 : [U](1) {
+                    write s$29 ()
+                }
+                write s$28 'zero(s$29)
+            }
+            write s$27 'succ(s$28)
+        }
+        write s$20 'succ(s$27)
     }
+    cut s$21 : nat[U] {
+        cut s$25 : nat[U] {
+            cut s$26 : [U](1) {
+                write s$26 ()
+            }
+            write s$25 'zero(s$26)
+        }
+        write s$21 'succ(s$25)
+    }
+    cut s$22 : [U]((nat[U] -> nat[U])) {
+        call four$0_1 s$22 
+    }
+    call addCPS$0 s$18 s$20 s$21 s$22
 
-proc one$0_1 (d$0 : [U]((nat[U] -> nat[U])))  =
+proc four$0_1 (d$0 : [U]((nat[U] -> nat[U])))  =
     write d$0 {
-    | (x, s$3) => id s$3 x
+    | (x, s$23) => write s$23 'succ(x)
     }
+
+proc addCPS$0 (s$1 : nat[U]) (x : nat[U]) (y : nat[U]) (k : [U]((nat[U] -> nat[U]))) =
+    read x {
+    | 'zero(n$2) => read n$2 {
+                    | () => read k (y, s$1)
+
+                    }
+    | 'succ(n$2) => cut s$13 : [U]((nat[U] -> nat[U])) {
+                        write s$13 {
+                        | (res, s$14) => cut s$15 : nat[U] {
+                                             write s$15 'succ(res)
+                                         }
+                                         read k (s$15, s$14)
+
+                        }
+                    }
+                    call addCPS$0 s$1 n$2 y s$13
+    }
+
+type nat[fat] = [fat](+{'zero : [fat](1), 'succ : nat[fat]})
 

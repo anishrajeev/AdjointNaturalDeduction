@@ -1,4 +1,9 @@
-type nat[m] = +{'zero : 1, 'succ : nat[m]}
+type nat[fat] = +{'zero : 1, 'succ : nat[fat]}
 
-defn one : nat -> nat -> nat = fun x => fun x => x
+defn addCPS (x: nat[U]) (y: nat) (k: nat -> nat[U]) : nat = 
+  match x with
+  | 'zero() => k y
+  | 'succ(xx) => addCPS xx y (fun res => k ('succ(res)))
+  end
 
+defn four : nat = addCPS ('succ('succ('zero()))) ('succ('zero())) (fun x => 'succ(x))
