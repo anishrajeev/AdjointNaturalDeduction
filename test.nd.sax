@@ -1,22 +1,125 @@
-type bool[m] = [m](+{'true : [m](1), 'false : [m](1)})
+proc twovm$0 (s$73 : vm[U U])  =
+    cut s$74 : vm[U U] {
+        call emptyvm$0 s$74 
+    }
+    cut s$75 : [U](([U](<nat[U]>) -> vm[U U])) {
+        read s$74 'push(s$75)
 
-type char[m] = [m](+{'b0 : [m](1), 'b1 : [m](1)})
+    }
+    cut s$76 : [U](<nat[U]>) {
+        cut s$84 : nat[U] {
+            call one$0 s$84 
+        }
+        write s$76 <s$84>
+    }
+    cut s$77 : vm[U U] {
+        read s$75 (s$76, s$77)
 
-type str[m] = [m](+{'nil : [m](1), 'cons : [m]((char[m] * str[m]))})
+    }
+    cut s$78 : [U](([U](<nat[U]>) -> vm[U U])) {
+        read s$77 'push(s$78)
 
-type automaton[m] = [m](&{'accepts : bool[m], 'step : [m]((char[m] -> automaton[m]))})
+    }
+    cut s$79 : [U](<nat[U]>) {
+        cut s$82 : nat[U] {
+            call one$0 s$82 
+        }
+        write s$79 <s$82>
+    }
+    cut s$80 : vm[U U] {
+        read s$78 (s$79, s$80)
 
-proc no$0 (s$1 : automaton[A])  =
-    write s$1 {
-    | s$2('accepts) => cut s$3 : [A](1) {
-                           write s$3 ()
-                       }
-                       write s$2 'false(s$3)
-    | s$4('step) => call no$0_1 s$4 
+    }
+    read s$80 'add(s$73)
+
+
+proc add$0 (s$9 : nat[U]) (a : nat[U]) (b : nat[U]) =
+    read b {
+    | 'zero(n$37) => read n$37 {
+                     | () => id s$9 a
+                     }
+    | 'succ(n$37) => cut s$17 : nat[U] {
+                         call add$0 s$17 a n$37
+                     }
+                     call succ$0 s$9 s$17
     }
 
-proc no$0_1 (d$0 : [A]((char[A] -> automaton[A])))  =
+proc one$0 (s$5 : nat[U])  =
+    cut s$7 : nat[U] {
+        call zero$0 s$7 
+    }
+    call succ$0 s$5 s$7
+
+proc zero$0 (s$1 : nat[U])  =
+    cut s$2 : [U](1) {
+        write s$2 ()
+    }
+    write s$1 'zero(s$2)
+
+type nat[m] = [m](+{'zero : [m](1), 'succ : nat[m]})
+
+proc succ$0 (s$3 : nat[U]) (n : nat[U]) =
+    write s$3 'succ(n)
+
+type vm[m s] = [m](&{'push : [m](([m](<nat[s]>) -> vm[m s])), 'pop : [m](([m](<nat[s]>) * vm[m s])), 'add : vm[m s]})
+
+proc vmstack$0 (s$21 : vm[U U]) (top : [U](<nat[U]>)) (rest : vm[U U]) =
+    write s$21 {
+    | 'push(s$22) => call vmstack$0_1 s$22 rest top
+    | 'pop(s$30) => write s$30 (top, rest)
+    | 'add(s$33) => cut s$34 : [U](([U](([U](<nat[U]>) * vm[U U])) * [U](<nat[U]>))) {
+                        cut s$35 : [U](([U](<nat[U]>) * vm[U U])) {
+                            read rest 'pop(s$35)
+
+                        }
+                        write s$34 (s$35, top)
+                    }
+                    read s$34 {
+                    | (n$2, n$3) => read n$2 {
+                                    | (n$12, n$13) => read n$12 {
+                                                      | <n$21> => read n$3 {
+                                                                  | <n$30> => cut s$52 : [U](<nat[U]>) {
+                                                                                  cut s$54 : nat[U] {
+                                                                                      call add$0 s$54 n$30 n$21
+                                                                                  }
+                                                                                  write s$52 <s$54>
+                                                                              }
+                                                                              call vmstack$0 s$33 s$52 n$13
+                                                                  }
+                                                      }
+                                    }
+                    }
+    }
+
+proc vmstack$0_1 (d$0 : [U](([U](<nat[U]>) -> vm[U U]))) (rest : vm[U U]) (top : [U](<nat[U]>)) =
     write d$0 {
-    | (c, s$5) => call no$0 s$5 
+    | (n, s$23) => cut s$26 : vm[U U] {
+                       call vmstack$0 s$26 top rest
+                   }
+                   call vmstack$0 s$23 n s$26
+    }
+
+proc emptyvm$0 (s$58 : vm[U U])  =
+    write s$58 {
+    | 'push(s$59) => call emptyvm$0_1 s$59 
+    | 'pop(s$65) => cut s$66 : [U](<nat[U]>) {
+                        cut s$69 : nat[U] {
+                            call zero$0 s$69 
+                        }
+                        write s$66 <s$69>
+                    }
+                    cut s$67 : vm[U U] {
+                        call emptyvm$0 s$67 
+                    }
+                    write s$65 (s$66, s$67)
+    | 'add(s$71) => call emptyvm$0 s$71 
+    }
+
+proc emptyvm$0_1 (d$0 : [U](([U](<nat[U]>) -> vm[U U])))  =
+    write d$0 {
+    | (n, s$60) => cut s$63 : vm[U U] {
+                       call emptyvm$0 s$63 
+                   }
+                   call vmstack$0 s$60 n s$63
     }
 

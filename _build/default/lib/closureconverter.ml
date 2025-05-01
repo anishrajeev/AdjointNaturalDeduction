@@ -187,7 +187,7 @@ let rec convert_cmd (types : tpdefn list) (gamma : context) (pname : procname) (
   | Cut (vn, t, p, q) ->
     let (p', sigma1, e1) = convert_cmd types gamma pname t p in
     let (q', sigma2, e2) = convert_cmd types ((vn, t)::gamma) pname desttp q in
-    (Cut (vn, t, p', q'), join sigma1 sigma2, List.append e1 e2)
+    (Cut (vn, t, p', q'), join sigma1 (remove sigma2 vn), List.append e1 e2)
   | Id (_, v2) -> (c, [(v2, find v2)], [])
   | Call (_, _, pl) -> (c, List.map (fun v -> (v, find v)) pl, [])
   | Add (_, x, y) -> (c, [(x, find x); (y, find y)], [])
