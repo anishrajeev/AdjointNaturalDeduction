@@ -1,176 +1,19 @@
-type nat[m] = [m](+{'succ : nat[m], 'zero : [m](1)})
+type bool[m] = [m](+{'true : [m](1), 'false : [m](1)})
 
-type natfunc[m k] = [m](^([k]((nat[k] -> nat[k]))))
+type char[m] = [m](+{'b0 : [m](1), 'b1 : [m](1)})
 
-type natlist[m k] = [m](+{'cons : [m](([m](<nat[k]>) * natlist[m k])), 'nil : [m](1)})
+type str[m] = [m](+{'nil : [m](1), 'cons : [m]((char[m] * str[m]))})
 
-proc apply$0 (s$1 : natlist[U U]) (ns : natlist[U U]) (f : natfunc[U U]) =
-    read ns {
-    | 'cons(n$2) => read n$2 {
-                    | (n$9, n$10) => read n$9 {
-                                     | <n$18> => cut s$15 : [U](([U](<nat[U]>) * natlist[U U])) {
-                                                     cut s$16 : [U](<nat[U]>) {
-                                                         cut s$21 : nat[U] {
-                                                             cut s$22 : [U]((nat[U] -> nat[U])) {
-                                                                 read f <s$22>
+type automaton[m] = [m](&{'accepts : bool[m], 'step : [m]((char[m] -> automaton[m]))})
 
-                                                             }
-                                                             read s$22 (n$18, s$21)
-
-                                                         }
-                                                         write s$16 <s$21>
-                                                     }
-                                                     cut s$17 : natlist[U U] {
-                                                         call apply$0 s$17 n$10 f
-                                                     }
-                                                     write s$15 (s$16, s$17)
-                                                 }
-                                                 write s$1 'cons(s$15)
-                                     }
+proc no$0 (s$1 : automaton[A])  =
+    write s$1 {
+    | 'accepts(s$2) => cut s$3 : [A](1) {
+                           write s$3 ()
+                       }
+                       write s$2 'false(s$3)
+    | 'step(s$4) => write s$4 {
+                    | (c, s$5) => call no$0 s$5 
                     }
-    | 'nil(n$2) => read n$2 {
-                   | () => cut s$27 : [U](1) {
-                               write s$27 ()
-                           }
-                           write s$1 'nil(s$27)
-                   }
     }
-
-proc apply$1 (s$1 : natlist[U U]) (ns : natlist[U U]) (f : natfunc[U U]) =
-    read ns {
-    | 'cons(n$2) => read n$2 {
-                    | (n$9, n$10) => read n$9 {
-                                     | <n$18> => cut s$41 : [U](([U](<nat[U]>) * natlist[U U])) {
-                                                     cut s$42 : [U](<nat[U]>) {
-                                                         cut s$47 : nat[U] {
-                                                             cut s$48 : [U]((nat[U] -> nat[U])) {
-                                                                 read f <s$48>
-
-                                                             }
-                                                             read s$48 (n$18, s$47)
-
-                                                         }
-                                                         write s$42 <s$47>
-                                                     }
-                                                     cut s$43 : natlist[U U] {
-                                                         call apply$0 s$43 n$10 f
-                                                     }
-                                                     write s$41 (s$42, s$43)
-                                                 }
-                                                 write s$1 'cons(s$41)
-                                     }
-                    }
-    | 'nil(n$2) => read n$2 {
-                   | () => cut s$53 : [U](1) {
-                               write s$53 ()
-                           }
-                           write s$1 'nil(s$53)
-                   }
-    }
-
-proc apply$2 (s$1 : natlist[L U]) (ns : natlist[L U]) (f : natfunc[U U]) =
-    read ns {
-    | 'cons(n$2) => read n$2 {
-                    | (n$9, n$10) => read n$9 {
-                                     | <n$18> => cut s$67 : [L](([L](<nat[U]>) * natlist[L U])) {
-                                                     cut s$68 : [L](<nat[U]>) {
-                                                         cut s$73 : nat[U] {
-                                                             cut s$74 : [U]((nat[U] -> nat[U])) {
-                                                                 read f <s$74>
-
-                                                             }
-                                                             read s$74 (n$18, s$73)
-
-                                                         }
-                                                         write s$68 <s$73>
-                                                     }
-                                                     cut s$69 : natlist[L U] {
-                                                         call apply$2 s$69 n$10 f
-                                                     }
-                                                     write s$67 (s$68, s$69)
-                                                 }
-                                                 write s$1 'cons(s$67)
-                                     }
-                    }
-    | 'nil(n$2) => read n$2 {
-                   | () => cut s$79 : [L](1) {
-                               write s$79 ()
-                           }
-                           write s$1 'nil(s$79)
-                   }
-    }
-
-proc succ_nat$0 (s$80 : [U]((nat[U] -> nat[U])))  =
-    write s$80 {
-    | (x, s$81) => write s$81 'succ(x)
-    }
-
-proc succ_nat$1 (s$80 : [U]((nat[U] -> nat[U])))  =
-    write s$80 {
-    | (x, s$83) => write s$83 'succ(x)
-    }
-
-proc l$0 (s$85 : natlist[U U])  =
-    cut s$86 : [U](([U](<nat[U]>) * natlist[U U])) {
-        cut s$87 : [U](<nat[U]>) {
-            cut s$90 : nat[U] {
-                cut s$91 : [U](1) {
-                    write s$91 ()
-                }
-                write s$90 'zero(s$91)
-            }
-            write s$87 <s$90>
-        }
-        cut s$88 : natlist[U U] {
-            cut s$89 : [U](1) {
-                write s$89 ()
-            }
-            write s$88 'nil(s$89)
-        }
-        write s$86 (s$87, s$88)
-    }
-    write s$85 'cons(s$86)
-
-proc l$1 (s$85 : natlist[L U])  =
-    cut s$92 : [L](([L](<nat[U]>) * natlist[L U])) {
-        cut s$93 : [L](<nat[U]>) {
-            cut s$96 : nat[U] {
-                cut s$97 : [U](1) {
-                    write s$97 ()
-                }
-                write s$96 'zero(s$97)
-            }
-            write s$93 <s$96>
-        }
-        cut s$94 : natlist[L U] {
-            cut s$95 : [L](1) {
-                write s$95 ()
-            }
-            write s$94 'nil(s$95)
-        }
-        write s$92 (s$93, s$94)
-    }
-    write s$85 'cons(s$92)
-
-proc main_linear_linear$0 (s$98 : natlist[U U])  =
-    cut s$100 : natlist[U U] {
-        call l$0 s$100 
-    }
-    cut s$101 : natfunc[U U] {
-        write s$101 {
-        | <s$102> => call succ_nat$0 s$102 
-        }
-    }
-    call apply$0 s$98 s$100 s$101
-
-proc main_linear_linear$1 (s$98 : natlist[L U])  =
-    cut s$106 : natlist[L U] {
-        call l$1 s$106 
-    }
-    cut s$107 : natfunc[U U] {
-        write s$107 {
-        | <s$108> => call succ_nat$0 s$108 
-        }
-    }
-    call apply$2 s$98 s$106 s$107
 

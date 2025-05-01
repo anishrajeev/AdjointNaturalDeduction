@@ -203,7 +203,6 @@ let convert_program (program : env) : env =
     match program with
     | [] -> acc
     | (ProcDefn (pn, (dest, desttp), pl, c))::program ->
-      let () = print_endline pn in
       let () = set_count 0 in
       (match c with
        | Write (_, s) ->
@@ -233,7 +232,7 @@ let convert_program (program : env) : env =
                    | InjPat (l, x) ->
                      let dt = contains ltl l in
                      let (c', _, e) = convert_cmd types pl pn dt c in
-                     (acc @ e, (InjPat (x, l), c'))
+                     (acc @ e, (InjPat (l, x), c'))
                    | _ -> raise (ClosureConversionError "Type Error6")) [] pcl
             in
             let pd = ProcDefn (pn, (dest, desttp), pl, Write (dest, Branches npcl)) in
