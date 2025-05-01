@@ -107,14 +107,15 @@ let rec contains (gamma : context) (x : varname) : tp =
 let compile_label (l : label) : string =
   "TAG_" ^ (List.nth (String.split_on_char '\'' l) 1)
 
-let compile_parm ((v, _) : parm) : string = "addr " ^ v
+let compile_parm ((v, _) : parm) : string =
+  if v = "else" then  "addr " ^ "_" ^ v else "addr " ^ v
 
 let rec compile_cmd (types : tpdefn list) (desttp : tp) (c : cmd) (prefix : string) : string =
   match c with
   | Read (v, s) ->
     (match s with
-     | Small (PairPat (x, d)) -> prefix ^ "invoke_closure_fun (" ^ v ^ ", " ^ x ^ ", " ^ d ^ ");\n"
-     | Small (InjPat (l, d)) -> prefix ^ "invoke_closure_record (" ^ v ^ ", " ^ compile_label l ^ ", " ^ d ^ ");"
+     | Small (PairPat (x, d)) -> prefix ^ "invoke_closure_fun (" ^ (if v = "else" then "_else" else v) ^ ", " ^ x ^ ", " ^ d ^ ");\n"
+     | Small (InjPat (l, d)) -> prefix ^ "invoke_closure_record (" ^ (if v = "else" then "_else" else v) ^ ", " ^ compile_label l ^ ", " ^ d ^ ");"
      | Small (ShiftPat d) -> prefix ^ "invoke_closure_susp (" ^ v ^ ", " ^ d ^ ");\n"
      | Small _ -> raise (CError "Pat Error2")
      | Branches [(PairPat (x, y), c)] ->

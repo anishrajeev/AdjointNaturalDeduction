@@ -6,7 +6,13 @@
 
 
 typedef enum tag {
+	TAG_cons,
+	TAG_extract,
 	TAG_false,
+	TAG_filter,
+	TAG_nil,
+	TAG_none,
+	TAG_some,
 	TAG_succ,
 	TAG_true,
 	TAG_zero
@@ -63,59 +69,48 @@ void invoke_closure_record (addr a, tag k, addr b) {
 
 
 void print$nat(addr val$);
-void print$suspense(addr val$);
-void print$also_suspended(addr val$);
-void print$broader_suspense(addr val$);
-void print$normal_suspended(addr val$);
-void test2fin$0(addr s$230);
-void test2out$0(addr s$226);
-void test2out$0_1(addr d$0);
-void test2$0(addr s$211);
-void test2$0_1(addr d$0);
-void test$0(addr s$197);
-void test$0_1(addr d$0);
-void bfrom$0(addr s$180, addr s);
-void bfrom$0_1(addr d$0, addr s);
-void die2$3(addr s$167, addr y, addr s);
-void die2$2(addr s$167, addr y, addr s);
-void die2$1(addr s$167, addr y, addr s);
-void die2$0(addr s$167, addr y, addr s);
-void bto$1(addr s$144, addr c);
-void bto$1_1(addr d$0, addr n$24, addr n$25);
-void bto$0(addr s$144, addr c);
-void bto$0_1(addr d$0, addr n$24, addr n$25);
-void from2$3(addr s$87, addr s);
-void from2$3_1(addr d$0, addr s);
-void from2$2(addr s$87, addr s);
-void from2$2_1(addr d$0, addr s);
-void from2$1(addr s$87, addr s);
-void from2$1_1(addr d$0, addr s);
-void from2$0(addr s$87, addr s);
-void from2$0_1(addr d$0, addr s);
-void die$3(addr s$74, addr y, addr s);
-void die$2(addr s$74, addr y, addr s);
-void die$1(addr s$74, addr y, addr s);
-void die$0(addr s$74, addr y, addr s);
-void from$1(addr s$59, addr s);
-void from$1_1(addr d$0, addr s);
-void from$0(addr s$59, addr s);
-void from$0_1(addr d$0, addr s);
-void to2$3(addr s$30, addr c);
-void to2$3_1(addr d$0, addr c);
-void to2$2(addr s$30, addr c);
-void to2$2_1(addr d$0, addr c);
-void to2$1(addr s$30, addr c);
-void to2$1_1(addr d$0, addr c);
-void to2$0(addr s$30, addr c);
-void to2$0_1(addr d$0, addr c);
-void to$3(addr s$1, addr c);
-void to$3_1(addr d$0, addr n$52, addr n$53);
-void to$2(addr s$1, addr c);
-void to$2_1(addr d$0, addr n$52, addr n$53);
-void to$1(addr s$1, addr c);
-void to$1_1(addr d$0, addr n$52, addr n$53);
-void to$0(addr s$1, addr c);
-void to$0_1(addr d$0, addr n$52, addr n$53);
+void print$bool(addr val$);
+void print$list(addr val$);
+void print$filter(addr val$);
+void print$some(addr val$);
+void main$0(addr s$447);
+void sieve_list_t$0(addr s$443);
+void four_all$0(addr s$439);
+void zero_t$0(addr s$433);
+void four$0(addr s$427);
+void two$0(addr s$424);
+void one$0(addr s$421);
+void primes$0(addr s$411, addr n);
+void filter_list$0(addr s$386, addr l, addr f);
+void cons_if_some$0(addr s$375, addr x, addr l);
+void construct_filter_from_list$0(addr s$353, addr factors);
+void filter_for$0(addr s$342, addr n, addr cont);
+void filter_for$0_1(addr d$0, addr n, addr cont);
+void is_factor_of$0(addr s$317, addr x, addr n);
+void is_factor_of$0_1(addr d$0, addr x, addr n);
+void is_factor_of$0_1_1(addr d$0, addr x, addr n);
+void if$0(addr s$308, addr c, addr then, addr _else);
+void bind$0(addr s$298, addr x, addr f);
+void some_if$0(addr s$289, addr n, addr cond);
+void null_filter$0(addr s$286);
+void null_filter$0_1(addr d$0);
+void all_list$0(addr s$277, addr n);
+void sieve_list$0(addr s$270, addr n);
+void sieve_list_helper$0(addr s$260, addr x, addr n);
+void sieve_list_helper_helper$0(addr s$233, addr res, addr x, addr n);
+void lt$0(addr s$182, addr x, addr y);
+void leq$0(addr s$131, addr x, addr y);
+void equal$0(addr s$80, addr x, addr y);
+void square$0(addr s$76, addr x);
+void mul$0(addr s$52, addr x, addr y);
+void consume_list$0(addr s$51, addr u, addr res);
+void consume_bool$0(addr s$50, addr u, addr res);
+void consume_nat$0(addr s$49, addr u, addr res);
+void dealloc_nat$0(addr s$40, addr x);
+void sub$0(addr s$28, addr x, addr y);
+void pred$0(addr s$20, addr x);
+void add$0(addr s$3, addr x, addr y);
+void succ$0(addr s$1, addr x);
 void print$nat(addr val$) {
 switch (val$->tag){
 case TAG_zero:{
@@ -132,650 +127,827 @@ break;
 }
 }
 }
-void print$suspense(addr val$) {
-addr val$_pi1 = val$->ptr;
-addr val$_pi2 = (val$+1)->ptr;
+void print$bool(addr val$) {
+switch (val$->tag){
+case TAG_true:{
+addr val$_TAG_true = (val$+1)->ptr;
+printf("'true ");
+printf("()");
+break;
+}
+case TAG_false:{
+addr val$_TAG_false = (val$+1)->ptr;
+printf("'false ");
+printf("()");
+break;
+}
+}
+}
+void print$list(addr val$) {
+switch (val$->tag){
+case TAG_nil:{
+addr val$_TAG_nil = (val$+1)->ptr;
+printf("'nil ");
+printf("()");
+break;
+}
+case TAG_cons:{
+addr val$_TAG_cons = (val$+1)->ptr;
+printf("'cons ");
+addr val$_TAG_cons_pi1 = val$_TAG_cons->ptr;
+addr val$_TAG_cons_pi2 = (val$_TAG_cons+1)->ptr;
 printf("(");
-print$nat(val$_pi1);
-printf(", ");
-printf("clos");
-printf(")");
-}
-void print$also_suspended(addr val$) {
-printf("clos");
-}
-void print$broader_suspense(addr val$) {
-addr val$_inshift = val$->ptr;
+addr val$_TAG_cons_pi1_inshift = val$_TAG_cons_pi1->ptr;
 printf("<");
-addr val$_inshift_pi1 = val$_inshift->ptr;
-addr val$_inshift_pi2 = (val$_inshift+1)->ptr;
-printf("(");
-print$nat(val$_inshift_pi1);
+print$nat(val$_TAG_cons_pi1_inshift);
+printf(">");
 printf(", ");
-printf("clos");
+print$list(val$_TAG_cons_pi2);
 printf(")");
-printf(">");
+break;
 }
-void print$normal_suspended(addr val$) {
-addr val$_inshift = val$->ptr;
-printf("<");
+}
+}
+void print$filter(addr val$) {
 printf("clos");
-printf(">");
 }
-void print$test2fin$0(addr val$) {
+void print$some(addr val$) {
+switch (val$->tag){
+case TAG_some:{
+addr val$_TAG_some = (val$+1)->ptr;
+printf("'some ");
+print$nat(val$_TAG_some);
+break;
+}
+case TAG_none:{
+addr val$_TAG_none = (val$+1)->ptr;
+printf("'none ");
+printf("()");
+break;
+}
+}
+}
+void print$main$0(addr val$) {
+print$list(val$);
+}
+void print$sieve_list_t$0(addr val$) {
+print$list(val$);
+}
+void print$four_all$0(addr val$) {
+print$list(val$);
+}
+void print$zero_t$0(addr val$) {
 print$nat(val$);
 }
-void print$test2out$0(addr val$) {
-printf("clos");
-}
-void print$test2$0(addr val$) {
-addr val$_inshift = val$->ptr;
-printf("<");
-printf("clos");
-printf(">");
-}
-void print$test$0(addr val$) {
+void print$four$0(addr val$) {
 print$nat(val$);
 }
-
-void test2fin$0(addr s$230) {
-	addr s$231 = alloc(2);
-	test2out$0(s$231);
-	addr s$232 = alloc(1);
-	test2$0(s$232);
-	invoke_closure_fun (s$231, s$232, s$230);
+void print$two$0(addr val$) {
+print$nat(val$);
+}
+void print$one$0(addr val$) {
+print$nat(val$);
+}
+void print$null_filter$0(addr val$) {
+printf("clos");
 }
 
-void test2out$0(addr s$226) {
-	test2out$0_1(s$226);
+void main$0(addr s$447) {
+	addr s$449 = alloc(2);
+	addr s$451 = alloc(2);
+	addr s$459 = alloc(2);
+	two$0(s$459);
+	addr s$460 = alloc(2);
+	two$0(s$460);
+	mul$0(s$451, s$459, s$460);
+	addr s$452 = alloc(2);
+	addr s$454 = alloc(2);
+	two$0(s$454);
+	addr s$455 = alloc(2);
+	two$0(s$455);
+	mul$0(s$452, s$454, s$455);
+	mul$0(s$449, s$451, s$452);
+	primes$0(s$447, s$449);
 }
 
-void test2out$0_1$(addr $params, addr $eta) {
+void sieve_list_t$0(addr s$443) {
+	addr s$445 = alloc(2);
+	four$0(s$445);
+	sieve_list$0(s$443, s$445);
+}
+
+void four_all$0(addr s$439) {
+	addr s$441 = alloc(2);
+	four$0(s$441);
+	all_list$0(s$439, s$441);
+}
+
+void zero_t$0(addr s$433) {
+	addr s$435 = alloc(2);
+	two$0(s$435);
+	addr s$436 = alloc(2);
+	addr s$437 = alloc(0);
+	s$437 = NULL;
+	s$436->tag = TAG_zero;
+	(s$436+1)->ptr = s$437;
+	mul$0(s$433, s$435, s$436);
+}
+
+void four$0(addr s$427) {
+	addr s$429 = alloc(2);
+	two$0(s$429);
+	addr s$430 = alloc(2);
+	two$0(s$430);
+	mul$0(s$427, s$429, s$430);
+}
+
+void two$0(addr s$424) {
+	addr s$425 = alloc(2);
+	one$0(s$425);
+	s$424->tag = TAG_succ;
+	(s$424+1)->ptr = s$425;
+}
+
+void one$0(addr s$421) {
+	addr s$422 = alloc(2);
+	addr s$423 = alloc(0);
+	s$423 = NULL;
+	s$422->tag = TAG_zero;
+	(s$422+1)->ptr = s$423;
+	s$421->tag = TAG_succ;
+	(s$421+1)->ptr = s$422;
+}
+
+void primes$0(addr s$411, addr n) {
+	addr s$413 = alloc(2);
+	all_list$0(s$413, n);
+	addr s$414 = alloc(2);
+	addr s$416 = alloc(2);
+	sieve_list$0(s$416, n);
+	construct_filter_from_list$0(s$414, s$416);
+	filter_list$0(s$411, s$413, s$414);
+}
+
+void filter_list$0(addr s$386, addr l, addr f) {
+	switch (l->tag){
+	case TAG_nil:{
+		addr n$2 = (l+1)->ptr;
+		addr s$391 = alloc(0);
+		s$391 = NULL;
+		s$386->tag = TAG_nil;
+		(s$386+1)->ptr = s$391;
+		break;
+	}
+
+	case TAG_cons:{
+		addr n$2 = (l+1)->ptr;
+		addr n$10 = n$2->ptr;
+		addr n$11 = (n$2+1)->ptr;
+		addr n$19 = n$10->ptr;
+		addr s$404 = alloc(2);
+		invoke_closure_fun (f, n$19, s$404);
+		addr s$405 = alloc(2);
+		filter_list$0(s$405, n$11, f);
+		cons_if_some$0(s$386, s$404, s$405);
+		break;
+	}
+	}
+}
+
+void cons_if_some$0(addr s$375, addr x, addr l) {
+	switch (x->tag){
+	case TAG_some:{
+		addr n$28 = (x+1)->ptr;
+		addr s$380 = alloc(2);
+		addr s$381 = alloc(1);
+		s$381->ptr = n$28;
+		s$380->ptr = s$381;
+		(s$380+1)->ptr = l;
+		s$375->tag = TAG_cons;
+		(s$375+1)->ptr = s$380;
+		break;
+	}
+
+	case TAG_none:{
+		addr n$28 = (x+1)->ptr;
+s$375->tag = l->tag;
+(s$375+1)->ptr = (l+1)->ptr;
+		s$375 = l;
+		break;
+	}
+	}
+}
+
+void construct_filter_from_list$0(addr s$353, addr factors) {
+	switch (factors->tag){
+	case TAG_nil:{
+		addr n$34 = (factors+1)->ptr;
+		null_filter$0(s$353);
+		break;
+	}
+
+	case TAG_cons:{
+		addr n$34 = (factors+1)->ptr;
+		addr n$42 = n$34->ptr;
+		addr n$43 = (n$34+1)->ptr;
+		addr n$51 = n$42->ptr;
+		addr s$372 = alloc(2);
+		construct_filter_from_list$0(s$372, n$43);
+		filter_for$0(s$353, n$51, s$372);
+		break;
+	}
+	}
+}
+
+void filter_for$0(addr s$342, addr n, addr cont) {
+	filter_for$0_1(s$342, n, cont);
+}
+
+void filter_for$0_1$(addr $params, addr $eta) {
+	addr n = ($eta+0)->ptr;
+	addr cont = ($eta+1)->ptr;
 	addr x = $params->ptr;
-	addr s$227 = ($params+1)->ptr;
-	addr n$2 = x->ptr;
-	invoke_closure_susp (n$2, s$227);
+	addr s$343 = ($params+1)->ptr;
+	addr s$345 = alloc(2);
+	addr s$349 = alloc(2);
+	is_factor_of$0(s$349, n, x);
+	some_if$0(s$345, n, s$349);
+	bind$0(s$343, s$345, cont);
 }
-void test2out$0_1(addr d$0) {
-	d$0->fun = &(test2out$0_1$);
+void filter_for$0_1(addr d$0, addr n, addr cont) {
+	d$0->fun = &(filter_for$0_1$);
+	addr d$0_eta = alloc(2);
+	(d$0_eta + 0)->ptr = n;
+	(d$0_eta + 1)->ptr = cont;
+	(d$0+1)->env = d$0_eta;
+}
+
+void is_factor_of$0(addr s$317, addr x, addr n) {
+	addr s$319 = alloc(2);
+	equal$0(s$319, x, n);
+	addr s$320 = alloc(2);
+	addr s$338 = alloc(0);
+	s$338 = NULL;
+	s$320->tag = TAG_true;
+	(s$320+1)->ptr = s$338;
+	addr s$321 = alloc(2);
+	is_factor_of$0_1(s$321, x, n);
+	if$0(s$317, s$319, s$320, s$321);
+}
+
+void is_factor_of$0_1$(addr $params, addr $eta) {
+	addr x = ($eta+0)->ptr;
+	addr n = ($eta+1)->ptr;
+	addr u = $params->ptr;
+	addr s$322 = ($params+1)->ptr;
+	addr s$324 = alloc(2);
+	lt$0(s$324, x, n);
+	addr s$325 = alloc(2);
+	addr s$334 = alloc(0);
+	s$334 = NULL;
+	s$325->tag = TAG_false;
+	(s$325+1)->ptr = s$334;
+	addr s$326 = alloc(2);
+	is_factor_of$0_1_1(s$326, x, n);
+	if$0(s$322, s$324, s$325, s$326);
+}
+void is_factor_of$0_1(addr d$0, addr x, addr n) {
+	d$0->fun = &(is_factor_of$0_1$);
+	addr d$0_eta = alloc(2);
+	(d$0_eta + 0)->ptr = x;
+	(d$0_eta + 1)->ptr = n;
+	(d$0+1)->env = d$0_eta;
+}
+
+void is_factor_of$0_1_1$(addr $params, addr $eta) {
+	addr x = ($eta+0)->ptr;
+	addr n = ($eta+1)->ptr;
+	addr u = $params->ptr;
+	addr s$327 = ($params+1)->ptr;
+	addr s$330 = alloc(2);
+	sub$0(s$330, x, n);
+	is_factor_of$0(s$327, x, s$330);
+}
+void is_factor_of$0_1_1(addr d$0, addr x, addr n) {
+	d$0->fun = &(is_factor_of$0_1_1$);
+	addr d$0_eta = alloc(2);
+	(d$0_eta + 0)->ptr = x;
+	(d$0_eta + 1)->ptr = n;
+	(d$0+1)->env = d$0_eta;
+}
+
+void if$0(addr s$308, addr c, addr then, addr _else) {
+	switch (c->tag){
+	case TAG_true:{
+		addr n$60 = (c+1)->ptr;
+s$308->tag = then->tag;
+(s$308+1)->ptr = (then+1)->ptr;
+		s$308 = then;
+		break;
+	}
+
+	case TAG_false:{
+		addr n$60 = (c+1)->ptr;
+		addr s$315 = alloc(0);
+		s$315 = NULL;
+		invoke_closure_fun (_else, s$315, s$308);
+		break;
+	}
+	}
+}
+
+void bind$0(addr s$298, addr x, addr f) {
+	switch (x->tag){
+	case TAG_some:{
+		addr n$64 = (x+1)->ptr;
+		invoke_closure_fun (f, n$64, s$298);
+		break;
+	}
+
+	case TAG_none:{
+		addr n$64 = (x+1)->ptr;
+		addr s$307 = alloc(0);
+		s$307 = NULL;
+		s$298->tag = TAG_none;
+		(s$298+1)->ptr = s$307;
+		break;
+	}
+	}
+}
+
+void some_if$0(addr s$289, addr n, addr cond) {
+	switch (cond->tag){
+	case TAG_true:{
+		addr n$70 = (cond+1)->ptr;
+		s$289->tag = TAG_some;
+		(s$289+1)->ptr = n;
+		break;
+	}
+
+	case TAG_false:{
+		addr n$70 = (cond+1)->ptr;
+		addr s$297 = alloc(0);
+		s$297 = NULL;
+		s$289->tag = TAG_none;
+		(s$289+1)->ptr = s$297;
+		break;
+	}
+	}
+}
+
+void null_filter$0(addr s$286) {
+	null_filter$0_1(s$286);
+}
+
+void null_filter$0_1$(addr $params, addr $eta) {
+	addr x = $params->ptr;
+	addr s$287 = ($params+1)->ptr;
+	s$287->tag = TAG_some;
+	(s$287+1)->ptr = x;
+}
+void null_filter$0_1(addr d$0) {
+	d$0->fun = &(null_filter$0_1$);
 	addr d$0_eta = alloc(0);
 	(d$0+1)->env = d$0_eta;
 }
 
-void test2$0(addr s$211) {
-	addr s$213 = alloc(1);
-	addr s$215 = alloc(1);
-	addr s$217 = alloc(1);
-	addr s$218 = alloc(2);
-	addr s$219 = alloc(2);
-	addr s$225 = alloc(0);
-	s$225 = NULL;
-	s$219->tag = TAG_zero;
-	(s$219+1)->ptr = s$225;
-	addr s$220 = alloc(2);
-	test2$0_1(s$220);
-	s$218->ptr = s$219;
-	(s$218+1)->ptr = s$220;
-	s$217->ptr = s$218;
-	bto$1(s$215, s$217);
-	bfrom$0(s$213, s$215);
-	bto$1(s$211, s$213);
+void all_list$0(addr s$277, addr n) {
+	addr s$279 = alloc(2);
+	addr s$283 = alloc(2);
+	addr s$284 = alloc(2);
+	addr s$285 = alloc(0);
+	s$285 = NULL;
+	s$284->tag = TAG_zero;
+	(s$284+1)->ptr = s$285;
+	s$283->tag = TAG_succ;
+	(s$283+1)->ptr = s$284;
+	s$279->tag = TAG_succ;
+	(s$279+1)->ptr = s$283;
+	addr s$280 = alloc(2);
+	square$0(s$280, n);
+	sieve_list_helper$0(s$277, s$279, s$280);
 }
 
-void test2$0_1$(addr $params, addr $eta) {
-	addr z = $params->ptr;
-	addr s$221 = ($params+1)->ptr;
-	addr s$222 = alloc(2);
-	addr s$223 = alloc(2);
-	s$223->tag = TAG_succ;
-	(s$223+1)->ptr = z;
-	s$222->tag = TAG_succ;
-	(s$222+1)->ptr = s$223;
-	s$221->tag = TAG_succ;
-	(s$221+1)->ptr = s$222;
-}
-void test2$0_1(addr d$0) {
-	d$0->fun = &(test2$0_1$);
-	addr d$0_eta = alloc(0);
-	(d$0+1)->env = d$0_eta;
+void sieve_list$0(addr s$270, addr n) {
+	addr s$272 = alloc(2);
+	addr s$274 = alloc(2);
+	addr s$275 = alloc(2);
+	addr s$276 = alloc(0);
+	s$276 = NULL;
+	s$275->tag = TAG_zero;
+	(s$275+1)->ptr = s$276;
+	s$274->tag = TAG_succ;
+	(s$274+1)->ptr = s$275;
+	s$272->tag = TAG_succ;
+	(s$272+1)->ptr = s$274;
+	sieve_list_helper$0(s$270, s$272, n);
 }
 
-void test$0(addr s$197) {
-	addr s$200 = alloc(2);
-	addr s$202 = alloc(2);
-	addr s$204 = alloc(2);
-	addr s$205 = alloc(2);
-	addr s$210 = alloc(0);
-	s$210 = NULL;
-	s$205->tag = TAG_zero;
-	(s$205+1)->ptr = s$210;
-	addr s$206 = alloc(2);
-	test$0_1(s$206);
-	s$204->ptr = s$205;
-	(s$204+1)->ptr = s$206;
-	to2$0(s$202, s$204);
-	from2$0(s$200, s$202);
-	addr s$198 = alloc(2);
-	to$0(s$198, s$200);
-	invoke_closure_susp (s$198, s$197);
+void sieve_list_helper$0(addr s$260, addr x, addr n) {
+	addr s$262 = alloc(2);
+	addr s$266 = alloc(2);
+	square$0(s$266, x);
+	leq$0(s$262, s$266, n);
+	sieve_list_helper_helper$0(s$260, s$262, x, n);
 }
 
-void test$0_1$(addr $params, addr $eta) {
-	addr z = $params->ptr;
-	addr s$207 = ($params+1)->ptr;
-	addr s$208 = alloc(2);
-	s$208->tag = TAG_succ;
-	(s$208+1)->ptr = z;
-	s$207->tag = TAG_succ;
-	(s$207+1)->ptr = s$208;
-}
-void test$0_1(addr d$0) {
-	d$0->fun = &(test$0_1$);
-	addr d$0_eta = alloc(0);
-	(d$0+1)->env = d$0_eta;
+void sieve_list_helper_helper$0(addr s$233, addr res, addr x, addr n) {
+	switch (res->tag){
+	case TAG_true:{
+		addr n$74 = (res+1)->ptr;
+		addr s$238 = alloc(2);
+		addr s$239 = alloc(1);
+		s$239->ptr = x;
+		addr s$240 = alloc(2);
+		addr s$242 = alloc(2);
+		succ$0(s$242, x);
+		sieve_list_helper$0(s$240, s$242, n);
+		s$238->ptr = s$239;
+		(s$238+1)->ptr = s$240;
+		s$233->tag = TAG_cons;
+		(s$233+1)->ptr = s$238;
+		break;
+	}
+
+	case TAG_false:{
+		addr n$74 = (res+1)->ptr;
+		addr s$250 = alloc(0);
+		dealloc_nat$0(s$250, n);
+		addr s$251 = alloc(2);
+		addr s$253 = alloc(0);
+		dealloc_nat$0(s$253, x);
+		addr s$254 = alloc(2);
+		addr s$255 = alloc(0);
+		s$255 = NULL;
+		s$254->tag = TAG_nil;
+		(s$254+1)->ptr = s$255;
+		consume_list$0(s$251, s$253, s$254);
+		consume_list$0(s$233, s$250, s$251);
+		break;
+	}
+	}
 }
 
-void bfrom$0(addr s$180, addr s) {
-	addr s$181 = alloc(2);
-	addr s$182 = alloc(2);
-	addr s$196 = alloc(0);
-	s$196 = NULL;
-	s$182->tag = TAG_zero;
-	(s$182+1)->ptr = s$196;
+void lt$0(addr s$182, addr x, addr y) {
 	addr s$183 = alloc(2);
-	bfrom$0_1(s$183, s);
-	s$181->ptr = s$182;
-	(s$181+1)->ptr = s$183;
-	s$180->ptr = s$181;
-}
-
-void bfrom$0_1$(addr $params, addr $eta) {
-	addr s = ($eta+0)->ptr;
-	addr n = $params->ptr;
-	addr s$184 = ($params+1)->ptr;
-	switch (n->tag){
+	s$183->ptr = x;
+	(s$183+1)->ptr = y;
+	addr n$78 = s$183->ptr;
+	addr n$79 = (s$183+1)->ptr;
+	switch (n$78->tag){
 	case TAG_zero:{
-		addr n$7 = (n+1)->ptr;
-		addr n$11 = s->ptr;
-		invoke_closure_susp (n$11, s$184);
+		addr n$87 = (n$78+1)->ptr;
+		switch (n$79->tag){
+		case TAG_zero:{
+			addr n$94 = (n$79+1)->ptr;
+			addr s$199 = alloc(0);
+			s$199 = NULL;
+			s$182->tag = TAG_false;
+			(s$182+1)->ptr = s$199;
+			break;
+		}
+
+		case TAG_succ:{
+			addr n$94 = (n$79+1)->ptr;
+			addr s$205 = alloc(0);
+			dealloc_nat$0(s$205, n$94);
+			addr s$206 = alloc(2);
+			addr s$207 = alloc(0);
+			s$207 = NULL;
+			s$206->tag = TAG_true;
+			(s$206+1)->ptr = s$207;
+			consume_bool$0(s$182, s$205, s$206);
+			break;
+		}
+		}
 		break;
 	}
 
 	case TAG_succ:{
-		addr n$7 = (n+1)->ptr;
-		die2$0(s$184, n$7, s);
+		addr n$87 = (n$78+1)->ptr;
+		switch (n$79->tag){
+		case TAG_zero:{
+			addr n$109 = (n$79+1)->ptr;
+			addr s$221 = alloc(0);
+			dealloc_nat$0(s$221, n$87);
+			addr s$222 = alloc(2);
+			addr s$223 = alloc(0);
+			s$223 = NULL;
+			s$222->tag = TAG_false;
+			(s$222+1)->ptr = s$223;
+			consume_bool$0(s$182, s$221, s$222);
+			break;
+		}
+
+		case TAG_succ:{
+			addr n$109 = (n$79+1)->ptr;
+			lt$0(s$182, n$87, n$109);
+			break;
+		}
+		}
 		break;
 	}
 	}
 }
-void bfrom$0_1(addr d$0, addr s) {
-	d$0->fun = &(bfrom$0_1$);
-	addr d$0_eta = alloc(1);
-	(d$0_eta + 0)->ptr = s;
-	(d$0+1)->env = d$0_eta;
-}
 
-void die2$3(addr s$167, addr y, addr s) {
-	die2$3(s$167, y, s);
-}
-
-void die2$2(addr s$167, addr y, addr s) {
-	die2$2(s$167, y, s);
-}
-
-void die2$1(addr s$167, addr y, addr s) {
-	die2$1(s$167, y, s);
-}
-
-void die2$0(addr s$167, addr y, addr s) {
-	die2$0(s$167, y, s);
-}
-
-void bto$1(addr s$144, addr c) {
-	addr n$18 = c->ptr;
-	addr n$24 = n$18->ptr;
-	addr n$25 = (n$18+1)->ptr;
-	addr s$163 = alloc(2);
-	bto$1_1(s$163, n$24, n$25);
-	s$144->ptr = s$163;
-}
-
-void bto$1_1$(addr $params, addr $eta) {
-	addr n$24 = ($eta+0)->ptr;
-	addr n$25 = ($eta+1)->ptr;
-	addr s$164 = $params->ptr;
-	invoke_closure_fun (n$25, n$24, s$164);
-}
-void bto$1_1(addr d$0, addr n$24, addr n$25) {
-	d$0->fun = &(bto$1_1$);
-	addr d$0_eta = alloc(2);
-	(d$0_eta + 0)->ptr = n$24;
-	(d$0_eta + 1)->ptr = n$25;
-	(d$0+1)->env = d$0_eta;
-}
-
-void bto$0(addr s$144, addr c) {
-	addr n$18 = c->ptr;
-	addr n$24 = n$18->ptr;
-	addr n$25 = (n$18+1)->ptr;
-	addr s$152 = alloc(2);
-	bto$0_1(s$152, n$24, n$25);
-	s$144->ptr = s$152;
-}
-
-void bto$0_1$(addr $params, addr $eta) {
-	addr n$24 = ($eta+0)->ptr;
-	addr n$25 = ($eta+1)->ptr;
-	addr s$153 = $params->ptr;
-	invoke_closure_fun (n$25, n$24, s$153);
-}
-void bto$0_1(addr d$0, addr n$24, addr n$25) {
-	d$0->fun = &(bto$0_1$);
-	addr d$0_eta = alloc(2);
-	(d$0_eta + 0)->ptr = n$24;
-	(d$0_eta + 1)->ptr = n$25;
-	(d$0+1)->env = d$0_eta;
-}
-
-void from2$3(addr s$87, addr s) {
-	addr s$130 = alloc(2);
-	addr s$143 = alloc(0);
-	s$143 = NULL;
-	s$130->tag = TAG_zero;
-	(s$130+1)->ptr = s$143;
-	addr s$131 = alloc(2);
-	from2$3_1(s$131, s);
-	s$87->ptr = s$130;
-	(s$87+1)->ptr = s$131;
-}
-
-void from2$3_1$(addr $params, addr $eta) {
-	addr s = ($eta+0)->ptr;
-	addr n = $params->ptr;
-	addr s$132 = ($params+1)->ptr;
-	switch (n->tag){
+void leq$0(addr s$131, addr x, addr y) {
+	addr s$132 = alloc(2);
+	s$132->ptr = x;
+	(s$132+1)->ptr = y;
+	addr n$120 = s$132->ptr;
+	addr n$121 = (s$132+1)->ptr;
+	switch (n$120->tag){
 	case TAG_zero:{
-		addr n$37 = (n+1)->ptr;
-		invoke_closure_susp (s, s$132);
+		addr n$129 = (n$120+1)->ptr;
+		switch (n$121->tag){
+		case TAG_zero:{
+			addr n$136 = (n$121+1)->ptr;
+			addr s$148 = alloc(0);
+			s$148 = NULL;
+			s$131->tag = TAG_true;
+			(s$131+1)->ptr = s$148;
+			break;
+		}
+
+		case TAG_succ:{
+			addr n$136 = (n$121+1)->ptr;
+			addr s$154 = alloc(0);
+			dealloc_nat$0(s$154, n$136);
+			addr s$155 = alloc(2);
+			addr s$156 = alloc(0);
+			s$156 = NULL;
+			s$155->tag = TAG_true;
+			(s$155+1)->ptr = s$156;
+			consume_bool$0(s$131, s$154, s$155);
+			break;
+		}
+		}
 		break;
 	}
 
 	case TAG_succ:{
-		addr n$37 = (n+1)->ptr;
-		die$2(s$132, n$37, s);
+		addr n$129 = (n$120+1)->ptr;
+		switch (n$121->tag){
+		case TAG_zero:{
+			addr n$151 = (n$121+1)->ptr;
+			addr s$170 = alloc(0);
+			dealloc_nat$0(s$170, n$129);
+			addr s$171 = alloc(2);
+			addr s$172 = alloc(0);
+			s$172 = NULL;
+			s$171->tag = TAG_false;
+			(s$171+1)->ptr = s$172;
+			consume_bool$0(s$131, s$170, s$171);
+			break;
+		}
+
+		case TAG_succ:{
+			addr n$151 = (n$121+1)->ptr;
+			leq$0(s$131, n$129, n$151);
+			break;
+		}
+		}
 		break;
 	}
 	}
 }
-void from2$3_1(addr d$0, addr s) {
-	d$0->fun = &(from2$3_1$);
-	addr d$0_eta = alloc(1);
-	(d$0_eta + 0)->ptr = s;
-	(d$0+1)->env = d$0_eta;
-}
 
-void from2$2(addr s$87, addr s) {
-	addr s$116 = alloc(2);
-	addr s$129 = alloc(0);
-	s$129 = NULL;
-	s$116->tag = TAG_zero;
-	(s$116+1)->ptr = s$129;
-	addr s$117 = alloc(2);
-	from2$2_1(s$117, s);
-	s$87->ptr = s$116;
-	(s$87+1)->ptr = s$117;
-}
-
-void from2$2_1$(addr $params, addr $eta) {
-	addr s = ($eta+0)->ptr;
-	addr n = $params->ptr;
-	addr s$118 = ($params+1)->ptr;
-	switch (n->tag){
+void equal$0(addr s$80, addr x, addr y) {
+	addr s$81 = alloc(2);
+	s$81->ptr = x;
+	(s$81+1)->ptr = y;
+	addr n$162 = s$81->ptr;
+	addr n$163 = (s$81+1)->ptr;
+	switch (n$162->tag){
 	case TAG_zero:{
-		addr n$37 = (n+1)->ptr;
-		invoke_closure_susp (s, s$118);
+		addr n$171 = (n$162+1)->ptr;
+		switch (n$163->tag){
+		case TAG_zero:{
+			addr n$178 = (n$163+1)->ptr;
+			addr s$97 = alloc(0);
+			s$97 = NULL;
+			s$80->tag = TAG_true;
+			(s$80+1)->ptr = s$97;
+			break;
+		}
+
+		case TAG_succ:{
+			addr n$178 = (n$163+1)->ptr;
+			addr s$103 = alloc(0);
+			dealloc_nat$0(s$103, n$178);
+			addr s$104 = alloc(2);
+			addr s$105 = alloc(0);
+			s$105 = NULL;
+			s$104->tag = TAG_false;
+			(s$104+1)->ptr = s$105;
+			consume_bool$0(s$80, s$103, s$104);
+			break;
+		}
+		}
 		break;
 	}
 
 	case TAG_succ:{
-		addr n$37 = (n+1)->ptr;
-		die$1(s$118, n$37, s);
+		addr n$171 = (n$162+1)->ptr;
+		switch (n$163->tag){
+		case TAG_zero:{
+			addr n$193 = (n$163+1)->ptr;
+			addr s$119 = alloc(0);
+			dealloc_nat$0(s$119, n$171);
+			addr s$120 = alloc(2);
+			addr s$121 = alloc(0);
+			s$121 = NULL;
+			s$120->tag = TAG_false;
+			(s$120+1)->ptr = s$121;
+			consume_bool$0(s$80, s$119, s$120);
+			break;
+		}
+
+		case TAG_succ:{
+			addr n$193 = (n$163+1)->ptr;
+			equal$0(s$80, n$171, n$193);
+			break;
+		}
+		}
 		break;
 	}
 	}
 }
-void from2$2_1(addr d$0, addr s) {
-	d$0->fun = &(from2$2_1$);
-	addr d$0_eta = alloc(1);
-	(d$0_eta + 0)->ptr = s;
-	(d$0+1)->env = d$0_eta;
+
+void square$0(addr s$76, addr x) {
+	mul$0(s$76, x, x);
 }
 
-void from2$1(addr s$87, addr s) {
-	addr s$102 = alloc(2);
-	addr s$115 = alloc(0);
-	s$115 = NULL;
-	s$102->tag = TAG_zero;
-	(s$102+1)->ptr = s$115;
-	addr s$103 = alloc(2);
-	from2$1_1(s$103, s);
-	s$87->ptr = s$102;
-	(s$87+1)->ptr = s$103;
-}
-
-void from2$1_1$(addr $params, addr $eta) {
-	addr s = ($eta+0)->ptr;
-	addr n = $params->ptr;
-	addr s$104 = ($params+1)->ptr;
-	switch (n->tag){
+void mul$0(addr s$52, addr x, addr y) {
+	switch (x->tag){
 	case TAG_zero:{
-		addr n$37 = (n+1)->ptr;
-		invoke_closure_susp (s, s$104);
+		addr n$204 = (x+1)->ptr;
+		addr s$58 = alloc(0);
+		dealloc_nat$0(s$58, x);
+		addr s$59 = alloc(2);
+		addr s$61 = alloc(0);
+		dealloc_nat$0(s$61, y);
+		addr s$62 = alloc(2);
+		addr s$63 = alloc(0);
+		s$63 = NULL;
+		s$62->tag = TAG_zero;
+		(s$62+1)->ptr = s$63;
+		consume_nat$0(s$59, s$61, s$62);
+		consume_nat$0(s$52, s$58, s$59);
 		break;
 	}
 
 	case TAG_succ:{
-		addr n$37 = (n+1)->ptr;
-		die$3(s$104, n$37, s);
+		addr n$204 = (x+1)->ptr;
+		addr s$72 = alloc(2);
+		mul$0(s$72, n$204, y);
+		add$0(s$52, y, s$72);
 		break;
 	}
 	}
 }
-void from2$1_1(addr d$0, addr s) {
-	d$0->fun = &(from2$1_1$);
-	addr d$0_eta = alloc(1);
-	(d$0_eta + 0)->ptr = s;
-	(d$0+1)->env = d$0_eta;
+
+void consume_list$0(addr s$51, addr u, addr res) {
+s$51->tag = res->tag;
+(s$51+1)->ptr = (res+1)->ptr;
+	s$51 = res;
 }
 
-void from2$0(addr s$87, addr s) {
-	addr s$88 = alloc(2);
-	addr s$101 = alloc(0);
-	s$101 = NULL;
-	s$88->tag = TAG_zero;
-	(s$88+1)->ptr = s$101;
-	addr s$89 = alloc(2);
-	from2$0_1(s$89, s);
-	s$87->ptr = s$88;
-	(s$87+1)->ptr = s$89;
+void consume_bool$0(addr s$50, addr u, addr res) {
+s$50->tag = res->tag;
+(s$50+1)->ptr = (res+1)->ptr;
+	s$50 = res;
 }
 
-void from2$0_1$(addr $params, addr $eta) {
-	addr s = ($eta+0)->ptr;
-	addr n = $params->ptr;
-	addr s$90 = ($params+1)->ptr;
-	switch (n->tag){
+void consume_nat$0(addr s$49, addr u, addr res) {
+s$49->tag = res->tag;
+(s$49+1)->ptr = (res+1)->ptr;
+	s$49 = res;
+}
+
+void dealloc_nat$0(addr s$40, addr x) {
+	switch (x->tag){
 	case TAG_zero:{
-		addr n$37 = (n+1)->ptr;
-		invoke_closure_susp (s, s$90);
+		addr n$210 = (x+1)->ptr;
+		s$40 = NULL;
 		break;
 	}
 
 	case TAG_succ:{
-		addr n$37 = (n+1)->ptr;
-		die$0(s$90, n$37, s);
+		addr n$210 = (x+1)->ptr;
+		dealloc_nat$0(s$40, n$210);
 		break;
 	}
 	}
 }
-void from2$0_1(addr d$0, addr s) {
-	d$0->fun = &(from2$0_1$);
-	addr d$0_eta = alloc(1);
-	(d$0_eta + 0)->ptr = s;
-	(d$0+1)->env = d$0_eta;
+
+void sub$0(addr s$28, addr x, addr y) {
+	switch (y->tag){
+	case TAG_zero:{
+		addr n$216 = (y+1)->ptr;
+s$28->tag = x->tag;
+(s$28+1)->ptr = (x+1)->ptr;
+		s$28 = x;
+		break;
+	}
+
+	case TAG_succ:{
+		addr n$216 = (y+1)->ptr;
+		addr s$36 = alloc(2);
+		sub$0(s$36, x, n$216);
+		pred$0(s$28, s$36);
+		break;
+	}
+	}
 }
 
-void die$3(addr s$74, addr y, addr s) {
-	die$3(s$74, y, s);
+void pred$0(addr s$20, addr x) {
+	switch (x->tag){
+	case TAG_zero:{
+		addr n$222 = (x+1)->ptr;
+		addr s$25 = alloc(0);
+		s$25 = NULL;
+		s$20->tag = TAG_zero;
+		(s$20+1)->ptr = s$25;
+		break;
+	}
+
+	case TAG_succ:{
+		addr n$222 = (x+1)->ptr;
+s$20->tag = n$222->tag;
+(s$20+1)->ptr = (n$222+1)->ptr;
+		s$20 = n$222;
+		break;
+	}
+	}
 }
 
-void die$2(addr s$74, addr y, addr s) {
-	die$2(s$74, y, s);
+void add$0(addr s$3, addr x, addr y) {
+	switch (x->tag){
+	case TAG_zero:{
+		addr n$228 = (x+1)->ptr;
+		addr s$9 = alloc(0);
+		dealloc_nat$0(s$9, y);
+		consume_nat$0(s$3, s$9, x);
+		break;
+	}
+
+	case TAG_succ:{
+		addr n$228 = (x+1)->ptr;
+		addr s$16 = alloc(2);
+		add$0(s$16, n$228, y);
+		succ$0(s$3, s$16);
+		break;
+	}
+	}
 }
 
-void die$1(addr s$74, addr y, addr s) {
-	die$1(s$74, y, s);
-}
-
-void die$0(addr s$74, addr y, addr s) {
-	die$0(s$74, y, s);
-}
-
-void from$1(addr s$59, addr s) {
-	addr s$67 = alloc(2);
-	addr s$71 = alloc(2);
-	addr s$72 = alloc(2);
-	addr s$73 = alloc(0);
-	s$73 = NULL;
-	s$72->tag = TAG_zero;
-	(s$72+1)->ptr = s$73;
-	s$71->tag = TAG_succ;
-	(s$71+1)->ptr = s$72;
-	s$67->tag = TAG_succ;
-	(s$67+1)->ptr = s$71;
-	addr s$68 = alloc(2);
-	from$1_1(s$68, s);
-	s$59->ptr = s$67;
-	(s$59+1)->ptr = s$68;
-}
-
-void from$1_1$(addr $params, addr $eta) {
-	addr s = ($eta+0)->ptr;
-	addr n = $params->ptr;
-	addr s$69 = ($params+1)->ptr;
-	invoke_closure_susp (s, s$69);
-}
-void from$1_1(addr d$0, addr s) {
-	d$0->fun = &(from$1_1$);
-	addr d$0_eta = alloc(1);
-	(d$0_eta + 0)->ptr = s;
-	(d$0+1)->env = d$0_eta;
-}
-
-void from$0(addr s$59, addr s) {
-	addr s$60 = alloc(2);
-	addr s$64 = alloc(2);
-	addr s$65 = alloc(2);
-	addr s$66 = alloc(0);
-	s$66 = NULL;
-	s$65->tag = TAG_zero;
-	(s$65+1)->ptr = s$66;
-	s$64->tag = TAG_succ;
-	(s$64+1)->ptr = s$65;
-	s$60->tag = TAG_succ;
-	(s$60+1)->ptr = s$64;
-	addr s$61 = alloc(2);
-	from$0_1(s$61, s);
-	s$59->ptr = s$60;
-	(s$59+1)->ptr = s$61;
-}
-
-void from$0_1$(addr $params, addr $eta) {
-	addr s = ($eta+0)->ptr;
-	addr n = $params->ptr;
-	addr s$62 = ($params+1)->ptr;
-	invoke_closure_susp (s, s$62);
-}
-void from$0_1(addr d$0, addr s) {
-	d$0->fun = &(from$0_1$);
-	addr d$0_eta = alloc(1);
-	(d$0_eta + 0)->ptr = s;
-	(d$0+1)->env = d$0_eta;
-}
-
-void to2$3(addr s$30, addr c) {
-	to2$3_1(s$30, c);
-}
-
-void to2$3_1$(addr $params, addr $eta) {
-	addr c = ($eta+0)->ptr;
-	addr s$52 = $params->ptr;
-	addr n$43 = c->ptr;
-	addr n$44 = (c+1)->ptr;
-	invoke_closure_fun (n$44, n$43, s$52);
-}
-void to2$3_1(addr d$0, addr c) {
-	d$0->fun = &(to2$3_1$);
-	addr d$0_eta = alloc(1);
-	(d$0_eta + 0)->ptr = c;
-	(d$0+1)->env = d$0_eta;
-}
-
-void to2$2(addr s$30, addr c) {
-	to2$2_1(s$30, c);
-}
-
-void to2$2_1$(addr $params, addr $eta) {
-	addr c = ($eta+0)->ptr;
-	addr s$45 = $params->ptr;
-	addr n$43 = c->ptr;
-	addr n$44 = (c+1)->ptr;
-	invoke_closure_fun (n$44, n$43, s$45);
-}
-void to2$2_1(addr d$0, addr c) {
-	d$0->fun = &(to2$2_1$);
-	addr d$0_eta = alloc(1);
-	(d$0_eta + 0)->ptr = c;
-	(d$0+1)->env = d$0_eta;
-}
-
-void to2$1(addr s$30, addr c) {
-	to2$1_1(s$30, c);
-}
-
-void to2$1_1$(addr $params, addr $eta) {
-	addr c = ($eta+0)->ptr;
-	addr s$38 = $params->ptr;
-	addr n$43 = c->ptr;
-	addr n$44 = (c+1)->ptr;
-	invoke_closure_fun (n$44, n$43, s$38);
-}
-void to2$1_1(addr d$0, addr c) {
-	d$0->fun = &(to2$1_1$);
-	addr d$0_eta = alloc(1);
-	(d$0_eta + 0)->ptr = c;
-	(d$0+1)->env = d$0_eta;
-}
-
-void to2$0(addr s$30, addr c) {
-	to2$0_1(s$30, c);
-}
-
-void to2$0_1$(addr $params, addr $eta) {
-	addr c = ($eta+0)->ptr;
-	addr s$31 = $params->ptr;
-	addr n$43 = c->ptr;
-	addr n$44 = (c+1)->ptr;
-	invoke_closure_fun (n$44, n$43, s$31);
-}
-void to2$0_1(addr d$0, addr c) {
-	d$0->fun = &(to2$0_1$);
-	addr d$0_eta = alloc(1);
-	(d$0_eta + 0)->ptr = c;
-	(d$0+1)->env = d$0_eta;
-}
-
-void to$3(addr s$1, addr c) {
-	addr n$52 = c->ptr;
-	addr n$53 = (c+1)->ptr;
-	to$3_1(s$1, n$52, n$53);
-}
-
-void to$3_1$(addr $params, addr $eta) {
-	addr n$52 = ($eta+0)->ptr;
-	addr n$53 = ($eta+1)->ptr;
-	addr s$27 = $params->ptr;
-	invoke_closure_fun (n$53, n$52, s$27);
-}
-void to$3_1(addr d$0, addr n$52, addr n$53) {
-	d$0->fun = &(to$3_1$);
-	addr d$0_eta = alloc(2);
-	(d$0_eta + 0)->ptr = n$52;
-	(d$0_eta + 1)->ptr = n$53;
-	(d$0+1)->env = d$0_eta;
-}
-
-void to$2(addr s$1, addr c) {
-	addr n$52 = c->ptr;
-	addr n$53 = (c+1)->ptr;
-	to$2_1(s$1, n$52, n$53);
-}
-
-void to$2_1$(addr $params, addr $eta) {
-	addr n$52 = ($eta+0)->ptr;
-	addr n$53 = ($eta+1)->ptr;
-	addr s$20 = $params->ptr;
-	invoke_closure_fun (n$53, n$52, s$20);
-}
-void to$2_1(addr d$0, addr n$52, addr n$53) {
-	d$0->fun = &(to$2_1$);
-	addr d$0_eta = alloc(2);
-	(d$0_eta + 0)->ptr = n$52;
-	(d$0_eta + 1)->ptr = n$53;
-	(d$0+1)->env = d$0_eta;
-}
-
-void to$1(addr s$1, addr c) {
-	addr n$52 = c->ptr;
-	addr n$53 = (c+1)->ptr;
-	to$1_1(s$1, n$52, n$53);
-}
-
-void to$1_1$(addr $params, addr $eta) {
-	addr n$52 = ($eta+0)->ptr;
-	addr n$53 = ($eta+1)->ptr;
-	addr s$13 = $params->ptr;
-	invoke_closure_fun (n$53, n$52, s$13);
-}
-void to$1_1(addr d$0, addr n$52, addr n$53) {
-	d$0->fun = &(to$1_1$);
-	addr d$0_eta = alloc(2);
-	(d$0_eta + 0)->ptr = n$52;
-	(d$0_eta + 1)->ptr = n$53;
-	(d$0+1)->env = d$0_eta;
-}
-
-void to$0(addr s$1, addr c) {
-	addr n$52 = c->ptr;
-	addr n$53 = (c+1)->ptr;
-	to$0_1(s$1, n$52, n$53);
-}
-
-void to$0_1$(addr $params, addr $eta) {
-	addr n$52 = ($eta+0)->ptr;
-	addr n$53 = ($eta+1)->ptr;
-	addr s$6 = $params->ptr;
-	invoke_closure_fun (n$53, n$52, s$6);
-}
-void to$0_1(addr d$0, addr n$52, addr n$53) {
-	d$0->fun = &(to$0_1$);
-	addr d$0_eta = alloc(2);
-	(d$0_eta + 0)->ptr = n$52;
-	(d$0_eta + 1)->ptr = n$53;
-	(d$0+1)->env = d$0_eta;
+void succ$0(addr s$1, addr x) {
+	s$1->tag = TAG_succ;
+	(s$1+1)->ptr = x;
 }
 int main (){
 	init_heap(1024 * 1024);
 	freopen("test.nd.val", "w", stdout);
-	addr test2fin$0$value = alloc(2);
-	test2fin$0(test2fin$0$value);
-	printf("value %s = ", "test2fin$0");
-	print$test2fin$0(test2fin$0$value);
+	addr main$0$value = alloc(2);
+	main$0(main$0$value);
+	printf("value %s = ", "main$0");
+	print$main$0(main$0$value);
 	printf("\n");
-	addr test2out$0$value = alloc(2);
-	test2out$0(test2out$0$value);
-	printf("value %s = ", "test2out$0");
-	print$test2out$0(test2out$0$value);
+	addr sieve_list_t$0$value = alloc(2);
+	sieve_list_t$0(sieve_list_t$0$value);
+	printf("value %s = ", "sieve_list_t$0");
+	print$sieve_list_t$0(sieve_list_t$0$value);
 	printf("\n");
-	addr test2$0$value = alloc(1);
-	test2$0(test2$0$value);
-	printf("value %s = ", "test2$0");
-	print$test2$0(test2$0$value);
+	addr four_all$0$value = alloc(2);
+	four_all$0(four_all$0$value);
+	printf("value %s = ", "four_all$0");
+	print$four_all$0(four_all$0$value);
 	printf("\n");
-	addr test$0$value = alloc(2);
-	test$0(test$0$value);
-	printf("value %s = ", "test$0");
-	print$test$0(test$0$value);
+	addr zero_t$0$value = alloc(2);
+	zero_t$0(zero_t$0$value);
+	printf("value %s = ", "zero_t$0");
+	print$zero_t$0(zero_t$0$value);
+	printf("\n");
+	addr four$0$value = alloc(2);
+	four$0(four$0$value);
+	printf("value %s = ", "four$0");
+	print$four$0(four$0$value);
+	printf("\n");
+	addr two$0$value = alloc(2);
+	two$0(two$0$value);
+	printf("value %s = ", "two$0");
+	print$two$0(two$0$value);
+	printf("\n");
+	addr one$0$value = alloc(2);
+	one$0(one$0$value);
+	printf("value %s = ", "one$0");
+	print$one$0(one$0$value);
+	printf("\n");
+	addr null_filter$0$value = alloc(2);
+	null_filter$0(null_filter$0$value);
+	printf("value %s = ", "null_filter$0");
+	print$null_filter$0(null_filter$0$value);
 	printf("\n");
 }
 
