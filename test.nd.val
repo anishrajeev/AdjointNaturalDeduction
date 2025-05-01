@@ -1,2 +1,4 @@
-value mylist2$0 = 'cons (<'succ 'zero ()>, 'cons (<'succ 'succ 'zero ()>, 'cons (<'succ 'succ 'succ 'zero ()>, 'nil ())))
-value mylist$0 = 'cons (<'zero ()>, 'cons (<'succ 'zero ()>, 'cons (<'succ 'succ 'zero ()>, 'nil ())))
+value test2fin$0 = 'succ 'succ 'succ 'zero ()
+value test2out$0 = clos
+value test2$0 = <clos>
+value test$0 = 'succ 'succ 'zero ()

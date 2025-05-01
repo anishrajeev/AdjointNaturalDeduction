@@ -1,12 +1,74 @@
-type nat[m] = +{'succ : nat[m], 'zero : 1}
+type nat[m] = +{'zero : 1, 'succ : nat[m]}
+type suspense[m] = nat[m] * (nat[m] -> nat[m])
+type also_suspended[m] = ^nat[m]
 
-type nlist[m k] = +{'cons : <nat[k]> * nlist[m k], 'nil : 1}
+type broader_suspense[m k] = <nat[k] * (nat[k] -> nat[k])>
+type normal_suspended[m k] = <[k]^nat[k]>
 
-defn addl (l : nlist[L L]) : nlist[L L] =
-  match l with
-  | 'nil () => 'nil ()
-  | 'cons (<x>, xs) => 'cons(<'succ x>, addl xs)
-  end
+defn to (c : suspense[L]) : also_suspended[L] =
+    match c with
+    | (a, b) => susp (b a)
+    end
 
-defn mylist : nlist[L L] = 'cons (<'zero ()>, 'cons (<'succ 'zero ()>, 'cons (<'succ 'succ 'zero ()>, 'nil ())))
-defn mylist2 : nlist[L L] = addl mylist
+inst to (c : suspense[S]) : also_suspended[S]
+inst to (c : suspense[A]) : also_suspended[A]
+inst to (c : suspense[U]) : also_suspended[U]
+defn to2 (c : suspense[L]) : also_suspended[L] =
+    susp
+    match c with
+    | (a, b) => b a
+    end
+
+inst to2 (c : suspense[S]) : also_suspended[S]
+inst to2 (c : suspense[A]) : also_suspended[A]
+inst to2 (c : suspense[U]) : also_suspended[U]
+defn from (s : also_suspended[A]) : suspense[A] =
+    ('succ 'succ 'zero (), fun n => s .force)
+
+inst from (s : also_suspended[U]) : suspense[U]
+defn die (y : nat[L]) (s : also_suspended[L]) : nat[L] =
+    die y s
+inst die (y : nat[S]) (s : also_suspended[S]) : nat[S]
+inst die (y : nat[A]) (s : also_suspended[A]) : nat[A]
+inst die (y : nat[U]) (s : also_suspended[U]) : nat[U]
+
+defn from2 (s : also_suspended[L]) : suspense[L] =
+    ('zero (), fun n =>
+                match n with
+                | 'zero () => s .force
+                | 'succ y => die y s
+                end)
+inst from2 (s : also_suspended[U]) : suspense[U]
+inst from2 (s : also_suspended[S]) : suspense[S]
+inst from2 (s : also_suspended[A]) : suspense[A]
+
+defn bto (c : broader_suspense[L S]) : normal_suspended[L S] =
+    match c with
+    | <(a, b)> => <susp (b a)>
+    end
+inst bto (c : broader_suspense[L L]) : normal_suspended[L L]
+
+defn die2 (y : nat[L]) (s : normal_suspended[L L]) : nat[L] =
+    die2 y s
+inst die2 (y : nat[S]) (s : normal_suspended[S S]) : nat[S]
+inst die2 (y : nat[A]) (s : normal_suspended[A A]) : nat[A]
+inst die2 (y : nat[U]) (s : normal_suspended[U U]) : nat[U]
+
+defn bfrom (s : normal_suspended[L L]) : broader_suspense[L L] =
+    <('zero (), fun n =>
+                match n with
+                | 'zero () =>
+                    match s with
+                    | <s> => s .force
+                    end
+                | 'succ y => die2 y s
+                end)>
+
+defn test : nat[L] = to (from2 (to2 ('zero (), fun z => 'succ 'succ z))) .force
+defn test2 : [L]<[L]^nat[L]> = bto (bfrom (bto <('zero (), fun z => 'succ 'succ 'succ z)>))
+defn test2out : [L]<[L]^nat[L]> -> nat[L] =
+    fun x =>
+    match x with
+    | <y> => y .force
+    end
+defn test2fin : nat[L] = test2out test2

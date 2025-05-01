@@ -96,6 +96,7 @@ let type_size (t : tp) : int =
   | Plus _ -> 2
   | Arrow _ -> 2
   | With _ -> 2
+  | Up _ -> 2
   | _ -> 1
 
 let rec contains (gamma : context) (x : varname) : tp =
