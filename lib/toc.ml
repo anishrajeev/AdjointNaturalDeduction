@@ -300,7 +300,8 @@ let rec generate_print_defined_types (program : env) : string =
     | Down t ->
       "addr " ^ v ^ "_inshift = " ^ v ^ "->ptr;\n" ^
       "printf(\"<\");\n" ^
-      inner t (v ^ "_inshift")
+      inner t (v ^ "_inshift") ^
+      "printf(\">\");\n"
     | Up _ -> "printf(\"clos\");\n"
     | Flat (_, t) -> inner t v
     | TpInst (name, _) ->

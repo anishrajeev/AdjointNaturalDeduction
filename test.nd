@@ -1,26 +1,12 @@
-type nat[m] = +{'zero : 1, 'succ : nat[m]}
+type nat[m] = +{'succ : nat[m], 'zero : 1}
 
-defn succ (n : nat) : nat = 'succ n
-inst succ (n : nat[S]) : nat[S]
+type nlist[m k] = +{'cons : <nat[k]> * nlist[m k], 'nil : 1}
 
-defn one: nat = succ ('zero ())
-inst one: nat[S]
+defn addl (l : nlist[L L]) : nlist[L L] =
+  match l with
+  | 'nil () => 'nil ()
+  | 'cons (<x>, xs) => 'cons(<'succ x>, addl xs)
+  end
 
-defn two: nat = succ one
-defn three: nat = succ two
-
-defn add (a : nat) (b : nat) : nat =
-match b with
-| 'zero () => a
-| 'succ b1 => succ (add a b1)
-end
-
-defn ack (m : nat) (n : nat) : nat =
-match m with
-| 'zero () => 'succ n
-| 'succ m1 => (match n with
-               | 'zero () => ack m1 one
-               | 'succ n1 => ack m1 (ack m n1)
-               end)
-end
-defn ack_two_two : nat = ack two two
+defn mylist : nlist[L L] = 'cons (<'zero ()>, 'cons (<'succ 'zero ()>, 'cons (<'succ 'succ 'zero ()>, 'nil ())))
+defn mylist2 : nlist[L L] = addl mylist
