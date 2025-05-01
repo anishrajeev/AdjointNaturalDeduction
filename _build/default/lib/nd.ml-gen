@@ -39,6 +39,9 @@ module Saxast = Nd__Saxast
 (** @canonical Nd.Statics *)
 module Statics = Nd__Statics
 
+(** @canonical Nd.Toc *)
+module Toc = Nd__Toc
+
 (** @canonical Nd.Top *)
 module Top = Nd__Top
 

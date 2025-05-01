@@ -9,4 +9,5 @@ nd__Ndtypecheck
 nd__Parse
 nd__Saxast
 nd__Statics
+nd__Toc
 nd__Unnest

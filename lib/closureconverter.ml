@@ -189,8 +189,8 @@ let rec convert_cmd (types : tpdefn list) (gamma : context) (pname : procname) (
       let (c', sigma, e) = convert_cmd types ((p, pt)::gamma) fresh_name dt c in
       let sigma' = remove sigma p in
       let () = set_count num in
-      let procd = ProcDefn (fresh_name, ("d$0", desttp), sigma', Write ("d$0", Branches [(PairPat (p, d), c')])) in
-      (Call (fresh_name, vn, List.map (fun (v, _) -> v) sigma'), sigma', procd::e)
+      let procd = ClosDefn (fresh_name, ("d$0", desttp), sigma', Write ("d$0", Branches [(PairPat (p, d), c')])) in
+      (Close (fresh_name, vn, List.map (fun (v, _) -> v) sigma'), sigma', procd::e)
     | Branches [(ShiftPat v, c)] ->
       let unrolled_tp = type_inst_converter types (unroll_type desttp) in
       let innertp = (match unrolled_tp with | Up t -> t | _ -> raise (ClosureConversionError "Type error1.5")) in
@@ -199,9 +199,9 @@ let rec convert_cmd (types : tpdefn list) (gamma : context) (pname : procname) (
       let () = set_count 0 in
       let (c', sigma, e) = convert_cmd types gamma fresh_name innertp c in
       let sigma' = remove sigma v in
-      let procd = ProcDefn (fresh_name, ("d$0", desttp), sigma', Write ("d$0", Branches [(ShiftPat v, c')])) in
+      let procd = ClosDefn (fresh_name, ("d$0", desttp), sigma', Write ("d$0", Branches [(ShiftPat v, c')])) in
       let () = set_count num in
-      (Call (fresh_name, vn, List.map (fun (v, _) -> v) sigma'), sigma', procd::e)
+      (Close (fresh_name, vn, List.map (fun (v, _) -> v) sigma'), sigma', procd::e)
       
     | Branches pcl ->
       let unrolled_tp = type_inst_converter types (unroll_type desttp) in
@@ -216,14 +216,15 @@ let rec convert_cmd (types : tpdefn list) (gamma : context) (pname : procname) (
                ((join sigma (remove sigma' d), List.append e e'), (InjPat (l, d), c'))
              | _ -> raise (ClosureConversionError "Type error3")) ([], []) pcl
       in
-      let procd = ProcDefn (fresh_name, ("d$0", desttp), sigma, Write ("d$0", Branches npcl)) in
-      (Call (fresh_name, vn, List.map (fun (v, _) -> v) sigma), sigma, procd::e))      
+      let procd = ClosDefn (fresh_name, ("d$0", desttp), sigma, Write ("d$0", Branches npcl)) in
+      (Close (fresh_name, vn, List.map (fun (v, _) -> v) sigma), sigma, procd::e))      
   | Cut (vn, t, p, q) ->
     let (p', sigma1, e1) = convert_cmd types gamma pname t p in
     let (q', sigma2, e2) = convert_cmd types ((vn, t)::gamma) pname desttp q in
     (Cut (vn, t, p', q'), join sigma1 (remove sigma2 vn), List.append e1 e2)
   | Id (_, v2) -> (c, [(v2, find v2)], [])
   | Call (_, _, pl) -> (c, List.map (fun v -> (v, find v)) pl, [])
+  | Close (_, _, pl) -> (c, List.map (fun v -> (v, find v)) pl, [])
   | Add (_, x, y) -> (c, [(x, find x); (y, find y)], [])
   | Minus (_, x, y) -> (c, [(x, find x); (y, find y)], [])
   | Div (_, x, y) -> (c, [(x, find x); (y, find y)], [])

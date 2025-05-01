@@ -28,7 +28,8 @@ let rec load (raw : Ast.env) (filenames : string list) : Ast.env =
 
 let print_to_file (filename : string) (message : string) =
   let oc = open_out filename in
-  Printf.fprintf oc "%s\n" message
+  Printf.fprintf oc "%s\n" message;
+  close_out oc
 
 let main () =
   try
@@ -64,7 +65,23 @@ let main () =
     
     let () = print_to_file (inputname^".sax") (Saxast.Print.pp_env closureconverted) in
     let () = print_endline ("Wrote to " ^ inputname ^ ".sax") in
+
+    let compiledtoc = Toc.compile_program inputname closureconverted in
+    let () = print_endline ("Compiled to C") in
+
+    let () = print_to_file (inputname^".sax.c") (compiledtoc) in
+    let () = print_endline ("Wrote to " ^ inputname ^ ".sax.c") in
+
+    let cmd = "gcc -w -O2 -o program " ^ inputname  ^ ".sax.c" in
+    let _ = (match Sys.command cmd with
+    | 0 -> print_endline "GCC compiled C code"
+    | _ -> failwith "GCC Compilation failed.") in
     
+    let cmd = "./program" in
+    let _ = (match Sys.command cmd with
+    | 0 -> print_endline (inputname ^ ".val created")
+    | _ -> failwith "Executable failed")
+    in
     serve_exit_code Serve_success |> Stdlib.exit
   with
   | Error_msg.Error ->

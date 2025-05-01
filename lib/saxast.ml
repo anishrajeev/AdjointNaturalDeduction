@@ -42,6 +42,7 @@ and cmd = Read of varname * storable
         | Mult of varname * varname * varname
         | Eq of varname * varname * varname
         | Set of varname * int
+        | Close of procname * varname * varname list
 (* | MarkedCmd of cmd Mark.marked *)
 
 type parm = varname * tp
@@ -50,6 +51,7 @@ type parm = varname * tp
 
 type defn = TypeDefn of tpname * mode list * tp (* * ext *)
           | ProcDefn of procname * parm * parm list * cmd (* * ext*)
+          | ClosDefn of procname * parm * parm list * cmd
           | FailDefn of defn (* * ext *)
 
 type env = defn list
@@ -100,11 +102,12 @@ let rec pp_cmd (col : int) (p : cmd) : string =
                         ^ indent col (pp_cmd col q)
   | Id(x, y) -> "id " ^ x ^ " " ^ y
   | Call(f, x, ys) -> "call " ^ f ^ " " ^ x ^ " " ^ String.concat " " ys
-  | Add (d, x, y) -> "add " ^ d ^ " x " ^ " y"
-  | Minus (d, x, y) -> "minus " ^ d ^ " x " ^ " y"
-  | Div (d, x, y) -> "div " ^ d ^ " x " ^ " y"
-  | Mult (d, x, y) -> "mult " ^ d ^ " x " ^ " y"
-  | Eq (d, x, y) -> "eq " ^ d ^ " x " ^ " y"
+  | Close(f, x, ys) -> "close " ^ f ^ " " ^ x ^ " " ^ String.concat " " ys
+  | Add (d, x, y) -> "add " ^ d ^ " " ^ x ^ " " ^ y
+  | Minus (d, x, y) -> "minus "  ^ d ^ " " ^ x ^ " " ^ y
+  | Div (d, x, y) -> "div "  ^ d ^ " " ^ x ^ " " ^ y
+  | Mult (d, x, y) -> "mult "  ^ d ^ " " ^ x ^ " " ^ y
+  | Eq (d, x, y) -> "eq "  ^ d ^ " " ^ x ^ " " ^ y
   | Set (d, i) -> "set " ^ d ^ " " ^ (string_of_int i)
 
 and pp_branches col branches = match branches with
@@ -128,6 +131,9 @@ let rec pp_defn defn = match defn with
   | ProcDefn(f, x_tau, y_sigmas, body) ->
      "proc " ^ f ^ " " ^ pp_parm x_tau ^ " " ^ pp_parms y_sigmas ^ " =\n"
      ^ indent 4 (pp_cmd 4 body) ^ "\n"
+  | ClosDefn (f, x_tau, y_sigmas, body) ->
+              "clos " ^ f ^ " " ^ pp_parm x_tau ^ " " ^ pp_parms y_sigmas ^ " =\n"
+              ^ indent 4 (pp_cmd 4 body) ^ "\n"
   | FailDefn(defn) -> "fail\n" ^ pp_defn defn
 
 let pp_env defns = String.concat "\n" (List.map pp_defn defns)

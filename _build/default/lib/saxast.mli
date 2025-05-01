@@ -42,6 +42,7 @@ and cmd = Read of varname * storable
         | Mult of varname * varname * varname
         | Eq of varname * varname * varname
         | Set of varname * int
+        | Close of procname * varname * varname list
 (* | MarkedCmd of cmd Mark.marked *)
 
 type parm = varname * tp
@@ -49,7 +50,8 @@ type parm = varname * tp
 (* type ext = Mark.ext option *)
 
 type defn = TypeDefn of tpname * mode list * tp (* * ext *)
-          | ProcDefn of procname * parm * parm list * cmd (* * ext*)
+          | ProcDefn of procname * parm * parm list * cmd
+          | ClosDefn of procname * parm * parm list * cmd
           | FailDefn of defn (* * ext *)
 
 type env = defn list

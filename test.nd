@@ -8,6 +8,45 @@ defn add_nat (x : nat) (y : nat) : nat =
         | 's x, y => 's (add_nat x y)
     end
 
+defn add_stream (s1 : stream) (s2 : stream) : stream =
+    record
+    | 'next => match s1.'next, s2.'next with
+        | (a1, s1), (a2, s2) =>
+            (add_nat a1 a2, add_stream s1 s2)
+        end
+    end
+
+defn const_stream (n : nat) : stream =
+    record
+    | 'next => match (n, n) with
+        | (n1, n2) => (n1, const_stream n2)
+        end
+    end
+
+defn take_stream (n : nat) (s : stream) : list * stream =
+    match n with
+    | 's n => match s.'next with
+        | v, rest => cons1 v (take_stream n rest)
+        end
+    | 'z () => 'nil (), s
+    end
+
+defn cons1 (v:nat) (p:list*stream) : list * stream = match p with
+     | (l, rest) => ('cons (v, l), rest)
+     end
+
+defn zero : nat = 'z ()
+defn one : nat = 's zero
+defn two : nat = 's one
+defn four : nat = add_nat two two
+defn eight : nat = add_nat four four
+
+defn zeros : stream = const_stream ('z ())
+defn ones : stream = const_stream ('s 'z ())
+defn twos : stream = add_stream ones ones
+
+defn twos_prefix : list * stream = take_stream four twos
+
 defn fib_stream_helper (a : nat) (b : nat) : stream =
     record
     | 'next =>
@@ -15,3 +54,6 @@ defn fib_stream_helper (a : nat) (b : nat) : stream =
         | b1, b2 => (add_nat a b1, fib_stream_helper b2 (add_nat a b1))
         end
     end
+
+defn fib_stream : stream = fib_stream_helper zero one
+defn fib_stream_prefix : list * stream = take_stream eight fib_stream
