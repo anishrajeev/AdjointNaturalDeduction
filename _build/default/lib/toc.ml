@@ -288,9 +288,8 @@ let rec generate_print_defined_types (program : env) : string =
            let case =
              "case " ^ compile_label l ^ ":{\n" ^
              "addr " ^ v ^ "_" ^ compile_label l ^ " = (" ^ v ^ "+1)->ptr;\n" ^
-             "printf(\" (" ^ l  ^ "\");\n" ^
+             "printf(\"" ^ l  ^ " \");\n" ^
              inner t (v ^ "_" ^ compile_label l) ^
-             "printf(\")\");\n" ^
              "break;\n" ^
              "}\n"
            in

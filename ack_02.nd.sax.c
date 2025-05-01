@@ -76,16 +76,14 @@ void print$nat(addr val$) {
 switch (val$->tag){
 case TAG_zero:{
 addr val$_TAG_zero = (val$+1)->ptr;
-printf(" ('zero");
+printf("'zero ");
 printf("()");
-printf(")");
 break;
 }
 case TAG_succ:{
 addr val$_TAG_succ = (val$+1)->ptr;
-printf(" ('succ");
+printf("'succ ");
 print$nat(val$_TAG_succ);
-printf(")");
 break;
 }
 }
