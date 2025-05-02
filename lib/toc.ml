@@ -347,7 +347,11 @@ let generate_main (types : tpdefn list) (file_name : string) (program : env) : s
       else inner program acc
     | _::program -> inner program acc
   in
-  (inner program (header ^ prefix ^ "init_heap(1024 * 1024);\n" ^ prefix ^ "freopen(\"" ^ file_name  ^".val\", \"w\", stdout);\n")) ^ "}\n"
+  let body = 
+  (inner program
+     (header ^ prefix ^ "init_heap(1024 * 1024);\n" ^ prefix ^ "freopen(\"" ^ file_name  ^".val\", \"w\", stdout);\n")) in
+  body ^ "printf(\"//Total allocations : %d\\n\", alloc_count);\n"
+  ^ "printf(\"//Total space : %d\\n\", alloc_size);\n"  ^ "}\n"
 
 let compile_program (file_name : string) (program : env) : string =
   let types = types program in 

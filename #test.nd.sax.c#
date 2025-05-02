@@ -191,10 +191,10 @@ void test2out$0(addr s$226) {
 }
 
 void test2out$0_1$(addr $params, addr $eta) {
-	addr x = $params->ptr;
-	addr s$227 = ($params+1)->ptr;
-	addr n$2 = x->ptr;
-	invoke_closure_susp (n$2, s$227);
+  addr x = $params->ptr;
+  addr s$227 = ($params+1)->ptr;
+  addr n$2 = x->ptr;
+  invoke_closure_susp (n$2, s$227);
 }
 void test2out$0_1(addr d$0) {
 	d$0->fun = &(test2out$0_1$);
@@ -777,7 +777,5 @@ int main (){
 	printf("value %s = ", "test$0");
 	print$test$0(test$0$value);
 	printf("\n");
-printf("//Total allocations : %d\n", alloc_count);
-printf("//Total space : %d\n", alloc_size);
 }
 
