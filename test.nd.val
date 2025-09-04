@@ -1,6 +1,16 @@
-value test2fin$0 = 'succ 'succ 'succ 'zero ()
-value test2out$0 = clos
-value test2$0 = <clos>
-value test$0 = 'succ 'succ 'zero ()
-//Total allocations : 59
-//Total space : 84
+value f$0 = 'false ()
+value t$0 = 'true ()
+value f2s$0 = clos
+value f2$0 = clos
+value fl4$0 = 'cons (<'succ 'succ 'succ 'succ 'zero ()>, 'cons (<'succ 'succ 'succ 'zero ()>, 'cons (<'succ 'zero ()>, 'nil ())))
+value fl3$0 = 'cons (<'succ 'succ 'succ 'zero ()>, 'cons (<'succ 'zero ()>, 'nil ()))
+value l4$0 = 'cons (<'succ 'succ 'succ 'succ 'zero ()>, 'cons (<'succ 'succ 'succ 'zero ()>, 'cons (<'succ 'succ 'zero ()>, 'cons (<'succ 'zero ()>, 'nil ()))))
+value l3$0 = 'cons (<'succ 'succ 'succ 'zero ()>, 'cons (<'succ 'succ 'zero ()>, 'cons (<'succ 'zero ()>, 'nil ())))
+value l2$0 = 'cons (<'succ 'succ 'zero ()>, 'cons (<'succ 'zero ()>, 'nil ()))
+value l1$0 = 'cons (<'succ 'zero ()>, 'nil ())
+value four$0 = 'succ 'succ 'succ 'succ 'zero ()
+value three$0 = 'succ 'succ 'succ 'zero ()
+value two$0 = 'succ 'succ 'zero ()
+value one$0 = 'succ 'zero ()
+//Total allocations : 271
+//Total space : 404

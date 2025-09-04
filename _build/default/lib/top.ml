@@ -58,7 +58,7 @@ let main () =
     let () = print_endline ("Compiled") in
 
     let eliminated = Cutidentity.eliminate_in_prog compiled in
-    let () = print_endline ("Cut identity eliminated") in
+      let () = print_endline ("Cut identity eliminated") in
     
     let closureconverted = Closureconverter.convert_program eliminated in
     let () = print_endline ("Closure Converted") in

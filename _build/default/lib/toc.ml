@@ -18,7 +18,7 @@ type tpdefn = tpname * (mode list) * tp
 exception CError of string
 
 let header : string = "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <sys/mman.h>\n#include <locale.h>\n\n"
-let setup : string = "typedef union value* addr;\n\ntypedef union value {\n  tag  tag;\n  addr ptr;\n  addr env;\n  void(*fun)(addr arg, addr env);\n int32_t i;\n } value;\n\nstatic void* heap;\nstatic unsigned long alloc_count;\nstatic unsigned long alloc_size;\n\nvoid init_heap(size_t total_size) {\n  heap = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);\n  if (heap == MAP_FAILED) {\n    printf(\"mmap failed\");\n    exit(EXIT_FAILURE);\n  }\n}\n\naddr alloc(int n) {\n  void* prev = heap;\n  heap = heap + n * sizeof(value);\n  alloc_count++;\n  alloc_size += n;\n  return (addr)prev;\n}\n\nvoid invoke_closure_fun (addr a, addr b, addr c) {\n  addr arg = alloca(2 * sizeof(value));\n  arg->ptr = b;\n  (arg+1)->ptr = c;\n  (a->fun)(arg, (a+1)->env);\n}\n\nvoid invoke_closure_susp (addr a, addr b) {\n  addr arg = alloca(1 * sizeof(value));\n  arg->ptr = b;\n  (a->fun)(arg, (a+1)->env);\n}\n\nvoid invoke_closure_record (addr a, tag k, addr b) {\n  addr arg = alloca(2 * sizeof(value));\n  arg->tag = k;\n  (arg+1)->ptr = b;\n  (a->fun)(arg, (a+1)->env);\n}\n\n\n"
+let setup : string = "typedef union value* addr;\n\ntypedef union value {\n  tag  tag;\n  addr ptr;\n  addr env;\n  void(*fun)(addr arg, addr env);\n int32_t i;\n } value;\n\nstatic void* heap;\nstatic unsigned long alloc_count;\nstatic unsigned long env_size;\nstatic unsigned long alloc_size;\n\nvoid init_heap(size_t total_size) {\n  heap = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);\n  if (heap == MAP_FAILED) {\n    printf(\"mmap failed\");\n    exit(EXIT_FAILURE);\n  }\n}\n\naddr alloc(int n) {\n  void* prev = heap;\n  heap = heap + n * sizeof(value);\n  alloc_count++;\n  alloc_size += n;\n  return (addr)prev;\n}\n\nvoid invoke_closure_fun (addr a, addr b, addr c) {\n  addr arg = alloca(2 * sizeof(value));\n  arg->ptr = b;\n  (arg+1)->ptr = c;\n  (a->fun)(arg, (a+1)->env);\n}\n\nvoid invoke_closure_susp (addr a, addr b) {\n  addr arg = alloca(1 * sizeof(value));\n  arg->ptr = b;\n  (a->fun)(arg, (a+1)->env);\n}\n\nvoid invoke_closure_record (addr a, tag k, addr b) {\n  addr arg = alloca(2 * sizeof(value));\n  arg->tag = k;\n  (arg+1)->ptr = b;\n  (a->fun)(arg, (a+1)->env);\n}\n\n\n"
 
 let rec types (program : env) : tpdefn list =
   match program with
@@ -156,6 +156,7 @@ let rec compile_cmd (types : tpdefn list) (desttp : tp) (c : cmd) (prefix : stri
   | Cut (v, t, c1, c2) ->
     let t = type_inst_converter types t in
     let size = type_size t in
+    prefix ^ "env_size += " ^ (string_of_int size) ^ ";\n" ^
     prefix ^ "addr " ^ v ^ " = alloc(" ^ string_of_int size ^ ");\n" ^
     compile_cmd types t c1 prefix ^
     compile_cmd types desttp c2 prefix
